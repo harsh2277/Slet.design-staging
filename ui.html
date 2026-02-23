@@ -182,16 +182,6 @@
         }
 
         /* Active States */
-        .sidebar-option {
-            cursor: pointer;
-            padding: 8px 12px;
-        }
-
-        .active-sidebar-option {
-            font-weight: bold;
-            background: #e0e0e0;
-        }
-
         .tab-button {
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
@@ -1106,20 +1096,304 @@
         }
 
         /* Tokens Tab */
-        .tokens-layout-flex-unique {
+        .tokens-tab-wrapper-unique {
             display: flex;
+            flex-direction: column;
             height: 100%;
         }
 
+        .tokens-layout-flex-unique {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+
         .tokens-left-sidebar-unique {
-            width: 180px;
-            border-right: 1px solid #ddd;
-            padding: 12px;
+            width: 25%;
+            border-right: 1px solid #E5E7EB;
+            padding: 12px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #FFFFFF;
+        }
+
+        .sidebar-option {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1F2937;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--radius-full);
+            transition: all 0.2s;
+            text-align: left;
+            background: transparent;
+            border: none;
+            width: 100%;
+        }
+
+        .sidebar-option:hover {
+            background: #F3F4F6;
+        }
+
+        .active-sidebar-option {
+            background: #EEF2FF;
+            color: #4F46E5;
+            border: 1.5px solid #4F46E5;
+            font-weight: 500;
+        }
+
+        .active-sidebar-option:hover {
+            background: #EEF2FF;
         }
 
         .tokens-right-content-wrapper-unique {
             flex: 1;
+            width: 75%;
             padding: 20px;
+            background: #FFFFFF;
+        }
+
+        /* Spacing Token Styles */
+        .spacing-container {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 8px 14px 14px;
+            gap: 16px;
+            background: #FAFAFA;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .spacing-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 18px;
+            width: 100%;
+        }
+
+        .spacing-main-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .spacing-title {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 150%;
+            color: #000000;
+        }
+
+        .spacing-grid-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .spacing-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .spacing-card {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 8px;
+            gap: 4px;
+            flex: 1;
+            min-width: 0;
+            height: 111px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .spacing-card:hover {
+            border-color: #4F46E5;
+        }
+
+        .spacing-card.selected {
+            background: #EFF6FF;
+            border: 1.5px solid #3B82F6;
+        }
+
+        .spacing-card.selected .spacing-box {
+            border-color: #3B82F6;
+        }
+
+        .spacing-card.selected .spacing-indicator {
+            border-color: #3B82F6;
+        }
+
+        .spacing-visual {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            height: 60px;
+            width: 100%;
+        }
+
+        .spacing-box {
+            box-sizing: border-box;
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.05);
+            border: 0.5px dashed #000000;
+            flex-shrink: 0;
+        }
+
+        .spacing-label-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+        }
+
+        .spacing-indicator {
+            height: 8px;
+            border: 1px dashed rgba(0, 0, 0, 0.5);
+        }
+
+        .spacing-label {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 150%;
+            text-align: center;
+            color: #000000;
+        }
+
+        .spacing-footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0px;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .spacing-footer-title {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 150%;
+            text-align: center;
+            color: #000000;
+        }
+
+        .spacing-dropdown {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 10px 10px 18px;
+            gap: 6px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .spacing-dropdown select {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.7);
+            border: none;
+            background: transparent;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            padding-right: 30px;
+        }
+
+        .spacing-dropdown-icon {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: 10px;
+            pointer-events: none;
+        }
+
+        /* Tokens Footer Styles */
+        .tokens-footer-wrapper-unique {
+            padding: 12px;
+            border-top: 1px solid #E5E7EB;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-16);
+            margin: 0;
+        }
+
+        .tokens-footer-text-unique {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: #6B7280;
+        }
+
+        .tokens-footer-button-unique {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 20px;
+            background: #4F46E5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tokens-footer-button-unique:hover {
+            background: #4338CA;
+        }
+
+        .tokens-footer-button-icon {
+            font-size: 18px;
+            line-height: 1;
         }
 
         /* Typography Tab */
@@ -1718,8 +1992,120 @@
                         </div>
                         <div class="tokens-right-content-wrapper-unique">
                             <div class="token-content-panel active-token-panel" id="token-spacing-content">
-                                <h3>Spacing Token Configuration Area</h3>
-                                <p>Configure spacing tokens here</p>
+                                <div class="spacing-container">
+                                    <div class="spacing-content-wrapper">
+                                        <div class="spacing-main-section">
+                                            <div class="spacing-title">Spacing</div>
+                                            <div class="spacing-grid-wrapper">
+                                                <!-- First Row -->
+                                                <div class="spacing-row">
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 8px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 8px;"></div>
+                                                            <div class="spacing-label">2px</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 12px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 11px;"></div>
+                                                            <div class="spacing-label">4px</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 14px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 13px;"></div>
+                                                            <div class="spacing-label">6px</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 16px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 16px;"></div>
+                                                            <div class="spacing-label">8px</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Second Row -->
+                                                <div class="spacing-row">
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 18px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 19px;"></div>
+                                                            <div class="spacing-label">10px</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 20px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 21px;"></div>
+                                                            <div class="spacing-label">12px</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 22px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 23px;"></div>
+                                                            <div class="spacing-label">14px</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="spacing-card" onclick="selectSpacingCard(this)">
+                                                        <div class="spacing-visual" style="gap: 24px;">
+                                                            <div class="spacing-box"></div>
+                                                            <div class="spacing-box"></div>
+                                                        </div>
+                                                        <div class="spacing-label-wrapper">
+                                                            <div class="spacing-indicator" style="width: 23px;"></div>
+                                                            <div class="spacing-label">16px</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="spacing-footer">
+                                            <div class="spacing-footer-title">Select Number of Spacing</div>
+                                            <div class="spacing-dropdown">
+                                                <select>
+                                                    <option value="10">10</option>
+                                                    <option value="12" selected>12</option>
+                                                    <option value="15">15</option>
+                                                    <option value="20">20</option>
+                                                    <option value="25">25</option>
+                                                    <option value="30">30</option>
+                                                </select>
+                                                <svg class="spacing-dropdown-icon" viewBox="0 0 20 20" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M5.55556 7.77778L10 12.2222L14.4444 7.77778"
+                                                        stroke="rgba(0, 0, 0, 0.5)" stroke-width="1.5"
+                                                        stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="token-content-panel" id="token-padding-content">
                                 <h3>Padding Token Configuration Area</h3>
@@ -1742,6 +2128,14 @@
                                 <p>Configure grid tokens here</p>
                             </div>
                         </div>
+                    </div>
+                    <!-- Tokens Footer -->
+                    <div class="tokens-footer-wrapper-unique">
+                        <span class="tokens-footer-text-unique">Configure design tokens for your system</span>
+                        <button class="tokens-footer-button-unique" onclick="addTokenVariables()">
+                            <span class="tokens-footer-button-icon">+</span>
+                            <span>Add Tokens</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1906,6 +2300,42 @@
             const options = document.querySelectorAll('.sidebar-option');
             options.forEach(opt => opt.classList.remove('active-sidebar-option'));
             optionElement.classList.add('active-sidebar-option');
+        }
+
+        // Spacing Card Click Handler
+        let selectedSpacingBase = 2; // Default base value
+
+        function selectSpacingCard(cardElement) {
+            // Remove selected class from all spacing cards
+            const cards = document.querySelectorAll('.spacing-card');
+            cards.forEach(card => card.classList.remove('selected'));
+
+            // Add selected class to clicked card
+            cardElement.classList.add('selected');
+
+            // Get the spacing value from the card
+            const label = cardElement.querySelector('.spacing-label');
+            selectedSpacingBase = parseInt(label.textContent);
+        }
+
+        // Generate Spacing Tokens
+        function addTokenVariables() {
+            const dropdown = document.querySelector('.spacing-dropdown select');
+            const numberOfTokens = parseInt(dropdown.value);
+
+            if (!selectedSpacingBase) {
+                figma.notify('Please select a spacing base value first');
+                return;
+            }
+
+            // Send message to code.js to create spacing variables
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'create-spacing-tokens',
+                    baseValue: selectedSpacingBase,
+                    numberOfTokens: numberOfTokens
+                }
+            }, '*');
         }
 
         // Component Detail Toggle

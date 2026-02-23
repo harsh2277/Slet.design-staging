@@ -17,13 +17,17 @@ figma.ui.onmessage = async (msg) => {
                 collection = figma.variables.createVariableCollection("Colors");
             }
 
+            // Rename first mode to Light if needed
+            if (collection.modes[0].name !== "Light") {
+                collection.renameMode(collection.modes[0].modeId, "Light");
+            }
+
             // Create dark mode if it doesn't exist
             let lightModeId = collection.modes[0].modeId;
             let darkModeId;
 
             if (collection.modes.length === 1) {
-                collection.addMode("Dark");
-                darkModeId = collection.modes[1].modeId;
+                darkModeId = collection.addMode("Dark");
             } else {
                 darkModeId = collection.modes[1].modeId;
             }
@@ -152,6 +156,66 @@ figma.ui.onmessage = async (msg) => {
         } catch (error) {
             figma.ui.postMessage({ type: 'variables-created', success: false, error: error.message });
             figma.notify('Error creating variables: ' + error.message);
+        }
+    }
+
+    if (msg.type === "create-spacing-tokens") {
+        try {
+            const baseValue = msg.baseValue;
+            const numberOfTokens = msg.numberOfTokens;
+
+            // Get or create a collection for spacing variables
+            let collection = figma.variables.getLocalVariableCollections().find(c => c.name === "Spacing");
+            if (!collection) {
+                collection = figma.variables.createVariableCollection("Spacing");
+            }
+
+            // Create Desktop, Tablet, and Mobile modes if they don't exist
+            let desktopModeId, tabletModeId, mobileModeId;
+
+            if (collection.modes.length === 1) {
+                // Rename default mode to Desktop
+                collection.renameMode(collection.modes[0].modeId, "Desktop");
+                desktopModeId = collection.modes[0].modeId;
+                // Add Tablet and Mobile modes
+                tabletModeId = collection.addMode("Tablet");
+                mobileModeId = collection.addMode("Mobile");
+            } else if (collection.modes.length === 2) {
+                desktopModeId = collection.modes[0].modeId;
+                tabletModeId = collection.modes[1].modeId;
+                mobileModeId = collection.addMode("Mobile");
+            } else if (collection.modes.length >= 3) {
+                desktopModeId = collection.modes[0].modeId;
+                tabletModeId = collection.modes[1].modeId;
+                mobileModeId = collection.modes[2].modeId;
+            }
+
+            // Generate spacing tokens (all even numbers)
+            for (let i = 0; i < numberOfTokens; i++) {
+                const desktopValue = baseValue * i;
+                // Tablet uses 75% of desktop value (rounded to even number)
+                const tabletValue = Math.round((desktopValue * 0.75) / 2) * 2;
+                // Mobile uses 50% of desktop value (rounded to even number)
+                const mobileValue = Math.round((desktopValue * 0.5) / 2) * 2;
+
+                const variableName = `spacing-${desktopValue}px`;
+
+                // Check if variable already exists
+                let variable = figma.variables.getLocalVariables().find(v => v.name === variableName);
+
+                if (!variable) {
+                    variable = figma.variables.createVariable(variableName, collection, "FLOAT");
+                }
+
+                // Set different values for each mode
+                variable.setValueForMode(desktopModeId, desktopValue);
+                variable.setValueForMode(tabletModeId, tabletValue);
+                variable.setValueForMode(mobileModeId, mobileValue);
+            }
+
+            figma.notify(`Created ${numberOfTokens} spacing tokens with base ${baseValue}px (Desktop: 100%, Tablet: 75%, Mobile: 50%)`);
+        } catch (error) {
+            figma.notify('Error creating spacing tokens: ' + error.message);
         }
     }
 };
