@@ -1516,62 +1516,499 @@
         }
 
         /* Components Tab */
-        .components-search-bar-unique {
-            padding: 16px;
-            border-bottom: 1px solid #ddd;
+        .components-tab-wrapper-unique {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: #FFFFFF;
         }
 
-        .components-grid-layout-unique {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            padding: 16px;
-        }
-
-        .component-card-1,
-        .component-card-2,
-        .component-card-3 {
-            border: 1px solid #ddd;
-            padding: 20px;
-            cursor: pointer;
-            min-height: 120px;
-        }
-
-        .component-detail-wrapper-unique {
-            display: none;
+        .components-main-screen {
+            display: flex;
             flex-direction: column;
             height: 100%;
         }
 
-        .component-detail-wrapper-unique.active {
+        .components-main-screen.hidden {
+            display: none;
+        }
+
+        .components-search-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding: 12px;
+            gap: 16px;
+            background: #FFFFFF;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .components-search-bar {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 4px 4px 18px;
+            gap: 90px;
+            width: 100%;
+            height: 48px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+        }
+
+        .components-search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.6);
+            background: transparent;
+        }
+
+        .components-search-button {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 12px;
+            gap: 8px;
+            width: 102px;
+            height: 40px;
+            background: #4F46E5;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: #FFFFFF;
+        }
+
+        .components-search-button:hover {
+            background: #4338CA;
+        }
+
+        .components-grid-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 16px;
+            overflow-y: scroll;
+            padding: 12px;
+        }
+
+        .components-grid-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .component-card {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0px;
+            width: 242px;
+            height: 164px;
+            background: #FAFAFA;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            flex: none;
+            order: 0;
+            flex-grow: 1;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .component-card:hover {
+            border-color: #4F46E5;
+        }
+
+        .component-card-preview {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            gap: 8px;
+            width: 242px;
+            height: 122px;
+            flex: none;
+            order: 0;
+            align-self: stretch;
+            flex-grow: 1;
+        }
+
+        .component-card-footer {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 12px 8px 12px;
+            width: 100%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .component-card-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: #000000;
+        }
+
+        .component-card-variant-count {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .component-coming-soon-overlay {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            gap: 8px;
+            position: absolute;
+            width: 242px;
+            height: 164px;
+            left: 0px;
+            top: 0px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            z-index: 2;
+        }
+
+        .component-coming-soon-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 160%;
+            color: #1350FF;
+        }
+
+        /* Component Detail View */
+        .component-detail-screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            background: #FFFFFF;
+        }
+
+        .component-detail-screen.active {
             display: flex;
         }
 
-        .component-detail-header-unique {
+        .component-detail-header {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             padding: 16px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .component-preview-area-unique {
-            flex: 1;
-            padding: 16px;
-        }
-
-        .component-config-fields-unique {
-            padding: 16px;
-            border-top: 1px solid #ddd;
-        }
-
-        .component-detail-footer-unique {
-            padding: 12px;
-            border-top: 1px solid #ddd;
-        }
-
-        .back-button-unique {
-            padding: 8px 16px;
-            border: 1px solid #000;
+            gap: 8px;
+            height: 54px;
+            background: #FFFFFF;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             cursor: pointer;
-            display: inline-block;
+        }
+
+        .component-detail-back-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 160%;
+            color: #000000;
+        }
+
+        .component-detail-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            flex: 1;
+            background: #FAFAFA;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .component-detail-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 16px;
+            gap: 16px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 0px;
+        }
+
+        .component-detail-title-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .component-detail-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 160%;
+            color: #000000;
+        }
+
+        .component-detail-description {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .component-detail-properties {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .component-property-field {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 4px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .component-property-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            font-size: 10px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .component-property-input {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 12px;
+            gap: 8px;
+            width: 100%;
+            height: 36px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: #000000;
+            outline: none;
+        }
+
+        .component-property-input:focus {
+            border-color: #4F46E5;
+        }
+
+        .component-property-input-wrapper {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 12px;
+            gap: 8px;
+            width: 100%;
+            height: 36px;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+        }
+
+        .component-property-input-wrapper input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: #000000;
+            flex: 1;
+            width: 100%;
+        }
+
+        .component-property-input-suffix {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.6);
+            flex-shrink: 0;
+        }
+
+        .component-property-color-picker {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 6px 6px 12px;
+            gap: 8px;
+            width: 100%;
+            height: 36px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            background: #FFFFFF;
+        }
+
+        .component-property-color-picker:focus-within {
+            border-color: #4F46E5;
+        }
+
+        .component-property-color-hex {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: #000000;
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+        }
+
+        .component-property-color-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .component-detail-preview {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            gap: 8px;
+            isolation: isolate;
+            width: 100%;
+            height: 286px;
+            background: #FAFAFA;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .component-detail-variant-badge {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 6px 12px;
+            gap: 8px;
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            background: rgba(19, 80, 255, 0.1);
+            border: 1px solid rgba(19, 80, 255, 0.5);
+            border-radius: 100px;
+            z-index: 1;
+        }
+
+        .component-detail-variant-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: #1350FF;
+        }
+
+        .component-detail-footer {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            gap: 8px;
+            height: 58px;
+            background: #FFFFFF;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            flex: none;
+            order: 1;
+            align-self: stretch;
+            flex-grow: 0;
+        }
+
+        .component-detail-footer-text {
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.8);
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+        }
+
+        .component-detail-add-button {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            gap: 8px;
+            width: 184px;
+            height: 34px;
+            background: #4F46E5;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 150%;
+            text-align: center;
+            color: #FFFFFF;
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+        }
+
+        .component-detail-add-button:hover {
+            background: #4338CA;
         }
 
         /* Icons Tab */
@@ -3016,36 +3453,331 @@
             <!-- COMPONENTS TAB -->
             <div class="tab-section" id="components-tab">
                 <div class="components-tab-wrapper-unique">
-                    <div class="components-search-bar-unique">
-                        <input type="text" placeholder="Search components..." style="width: 100%; padding: 8px;">
+                    <!-- Main Components Screen -->
+                    <div class="components-main-screen" id="components-main-screen">
+                        <div class="components-search-wrapper">
+                            <div class="components-search-bar">
+                                <input type="text" class="components-search-input" placeholder="Search Components">
+                                <button class="components-search-button">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z"
+                                            stroke="white" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round" />
+                                        <path d="M19 19L14.65 14.65" stroke="white" stroke-width="1.5"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="components-grid-container">
+                            <!-- Row 1 -->
+                            <div class="components-grid-row">
+                                <div class="component-card" onclick="openComponentDetail('buttons')">
+                                    <div class="component-card-preview">
+                                        <svg width="127" height="45" viewBox="0 0 127 45" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <!-- Button Background -->
+                                            <rect width="127" height="45" rx="8" fill="#1350FF" />
+
+                                            <!-- Left Icon (20x20 at padding 12px from left) -->
+                                            <g transform="translate(12, 12.5)">
+                                                <path
+                                                    d="M10 1.6665C5.40002 1.6665 1.66669 5.39984 1.66669 9.99984C1.66669 14.5998 5.40002 18.3332 10 18.3332C14.6 18.3332 18.3334 14.5998 18.3334 9.99984C18.3334 5.39984 14.6 1.6665 10 1.6665ZM3.33335 9.99984C3.33335 6.3165 6.31669 3.33317 10 3.33317C11.5417 3.33317 12.9584 3.85817 14.0834 4.7415L4.74169 14.0832C3.85835 12.9582 3.33335 11.5415 3.33335 9.99984ZM10 16.6665C8.45835 16.6665 7.04169 16.1415 5.91669 15.2582L15.2584 5.9165C16.1417 7.0415 16.6667 8.45817 16.6667 9.99984C16.6667 13.6832 13.6834 16.6665 10 16.6665Z"
+                                                    fill="white" />
+                                            </g>
+
+                                            <!-- Button Text (centered) -->
+                                            <text x="63.5" y="28" font-family="Poppins" font-size="14" font-weight="500"
+                                                fill="#FFFFFF" text-anchor="middle">Button</text>
+
+                                            <!-- Right Icon (20x20 at padding 12px from right) -->
+                                            <g transform="translate(95, 12.5)">
+                                                <path
+                                                    d="M10 1.6665C5.40002 1.6665 1.66669 5.39984 1.66669 9.99984C1.66669 14.5998 5.40002 18.3332 10 18.3332C14.6 18.3332 18.3334 14.5998 18.3334 9.99984C18.3334 5.39984 14.6 1.6665 10 1.6665ZM3.33335 9.99984C3.33335 6.3165 6.31669 3.33317 10 3.33317C11.5417 3.33317 12.9584 3.85817 14.0834 4.7415L4.74169 14.0832C3.85835 12.9582 3.33335 11.5415 3.33335 9.99984ZM10 16.6665C8.45835 16.6665 7.04169 16.1415 5.91669 15.2582L15.2584 5.9165C16.1417 7.0415 16.6667 8.45817 16.6667 9.99984C16.6667 13.6832 13.6834 16.6665 10 16.6665Z"
+                                                    fill="white" />
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Buttons</div>
+                                        <div class="component-card-variant-count">36 Variant</div>
+                                    </div>
+                                </div>
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <!-- Text Field Preview -->
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <!-- Text Field Preview -->
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row 2 -->
+                            <div class="components-grid-row">
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row 3 -->
+                            <div class="components-grid-row">
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                                <div class="component-card">
+                                    <div class="component-card-preview">
+                                        <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <text x="10" y="15" font-family="Instrument Sans" font-size="8.75"
+                                                font-weight="500" fill="#454A53">Label *</text>
+                                            <rect x="10" y="20" width="180" height="27.5" rx="5" fill="white"
+                                                stroke="#E9EAEB" stroke-width="0.625" />
+                                            <text x="20" y="37" font-family="Instrument Sans" font-size="8.75"
+                                                fill="#9EA2AD">Placeholder text...</text>
+                                        </svg>
+                                    </div>
+                                    <div class="component-card-footer">
+                                        <div class="component-card-title">Text Filed</div>
+                                        <div class="component-card-variant-count">15 Variant</div>
+                                    </div>
+                                    <div class="component-coming-soon-overlay">
+                                        <div class="component-coming-soon-text">Coming Soon</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="components-grid-layout-unique" id="components-grid">
-                        <div class="component-card-1" onclick="openComponentDetail()">
-                            <h4>Button</h4>
-                            <p>Component card 1</p>
+
+                    <!-- Component Detail Screen -->
+                    <div class="component-detail-screen" id="component-detail-screen">
+                        <div class="component-detail-header" onclick="closeComponentDetail()">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.25 13.5L6.75 9L11.25 4.5" stroke="black" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span class="component-detail-back-text">Back</span>
                         </div>
-                        <div class="component-card-2" onclick="openComponentDetail()">
-                            <h4>Input</h4>
-                            <p>Component card 2</p>
+                        <div class="component-detail-content">
+                            <div class="component-detail-info">
+                                <div class="component-detail-title-section">
+                                    <div class="component-detail-title" id="detail-component-title">Buttons</div>
+                                    <div class="component-detail-description">Meet the 36 Variant, a sleek and
+                                        innovative solution that enhances your experience. Perfect for those who value
+                                        style and functionality, this product seamlessly fits into your daily routine.
+                                    </div>
+                                </div>
+                                <div class="component-detail-properties">
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Button Text</div>
+                                        <input type="text" class="component-property-input" id="button-text-input"
+                                            value="Button">
+                                    </div>
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Radius</div>
+                                        <div class="component-property-input-wrapper">
+                                            <input type="number" id="radius-input" value="12">
+                                            <span class="component-property-input-suffix">PX</span>
+                                        </div>
+                                    </div>
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Primary Color</div>
+                                        <div class="component-property-color-picker" style="position: relative;">
+                                            <input type="text" class="component-property-color-hex"
+                                                id="primary-color-input" value="#1350FF">
+                                            <input type="color" id="primary-color-picker" value="#1350FF"
+                                                style="position: absolute; bottom: -45px; right: 0; width: 50px; height: 40px; border: none; cursor: pointer; opacity: 0;">
+                                            <div class="component-property-color-circle" id="primary-color-circle"
+                                                style="background: #1350FF;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Text Color</div>
+                                        <div class="component-property-color-picker" style="position: relative;">
+                                            <input type="text" class="component-property-color-hex"
+                                                id="text-color-input" value="#FFFFFF">
+                                            <input type="color" id="text-color-picker" value="#FFFFFF"
+                                                style="position: absolute; bottom: -45px; right: 0; width: 50px; height: 40px; border: none; cursor: pointer; opacity: 0;">
+                                            <div class="component-property-color-circle" id="text-color-circle"
+                                                style="background: #FFFFFF; border: 1px solid rgba(0, 0, 0, 0.1);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="component-detail-preview">
+                                <svg width="210" height="75" viewBox="0 0 210 75" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" id="button-preview-svg">
+                                    <!-- Button Background -->
+                                    <rect width="210" height="75" rx="12" fill="#1350FF" />
+
+                                    <!-- Left Icon (32x32 at padding 20px from left) -->
+                                    <g transform="translate(20, 21.5)">
+                                        <g transform="scale(1.6)">
+                                            <path
+                                                d="M10 1.6665C5.40002 1.6665 1.66669 5.39984 1.66669 9.99984C1.66669 14.5998 5.40002 18.3332 10 18.3332C14.6 18.3332 18.3334 14.5998 18.3334 9.99984C18.3334 5.39984 14.6 1.6665 10 1.6665ZM3.33335 9.99984C3.33335 6.3165 6.31669 3.33317 10 3.33317C11.5417 3.33317 12.9584 3.85817 14.0834 4.7415L4.74169 14.0832C3.85835 12.9582 3.33335 11.5415 3.33335 9.99984ZM10 16.6665C8.45835 16.6665 7.04169 16.1415 5.91669 15.2582L15.2584 5.9165C16.1417 7.0415 16.6667 8.45817 16.6667 9.99984C16.6667 13.6832 13.6834 16.6665 10 16.6665Z"
+                                                fill="white" />
+                                        </g>
+                                    </g>
+
+                                    <!-- Button Text (centered) -->
+                                    <text x="105" y="46" font-family="Poppins" font-size="22" font-weight="500"
+                                        fill="#FFFFFF" text-anchor="middle">Button</text>
+
+                                    <!-- Right Icon (32x32 at padding 20px from right) -->
+                                    <g transform="translate(158, 21.5)">
+                                        <g transform="scale(1.6)">
+                                            <path
+                                                d="M10 1.6665C5.40002 1.6665 1.66669 5.39984 1.66669 9.99984C1.66669 14.5998 5.40002 18.3332 10 18.3332C14.6 18.3332 18.3334 14.5998 18.3334 9.99984C18.3334 5.39984 14.6 1.6665 10 1.6665ZM3.33335 9.99984C3.33335 6.3165 6.31669 3.33317 10 3.33317C11.5417 3.33317 12.9584 3.85817 14.0834 4.7415L4.74169 14.0832C3.85835 12.9582 3.33335 11.5415 3.33335 9.99984ZM10 16.6665C8.45835 16.6665 7.04169 16.1415 5.91669 15.2582L15.2584 5.9165C16.1417 7.0415 16.6667 8.45817 16.6667 9.99984C16.6667 13.6832 13.6834 16.6665 10 16.6665Z"
+                                                fill="white" />
+                                        </g>
+                                    </g>
+                                </svg>
+                                <div class="component-detail-variant-badge">
+                                    <div class="component-detail-variant-text">36 Variant</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="component-card-3" onclick="openComponentDetail()">
-                            <h4>Card</h4>
-                            <p>Component card 3</p>
-                        </div>
-                    </div>
-                    <div class="component-detail-wrapper-unique" id="component-detail">
-                        <div class="component-detail-header-unique">
-                            <span class="back-button-unique" onclick="closeComponentDetail()">← Back</span>
-                            <h3>Component Detail View</h3>
-                        </div>
-                        <div class="component-preview-area-unique">
-                            <p>Component Preview Area</p>
-                        </div>
-                        <div class="component-config-fields-unique">
-                            <p>Component Configuration Fields</p>
-                        </div>
-                        <div class="component-detail-footer-unique">
-                            <p>Component Actions</p>
+                        <div class="component-detail-footer">
+                            <div class="component-detail-footer-text">Generate Component Set With Icons</div>
+                            <button class="component-detail-add-button">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 3.75V14.25" stroke="white" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                                Add Component Set
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -3337,10 +4069,187 @@
         }
 
         // Component Detail Toggle
-        function openComponentDetail() {
-            document.getElementById('components-grid').style.display = 'none';
-            document.getElementById('component-detail').classList.add('active');
+        function openComponentDetail(componentType) {
+            document.getElementById('components-main-screen').classList.add('hidden');
+            document.getElementById('component-detail-screen').classList.add('active');
+
+            // Update title based on component type
+            if (componentType === 'buttons') {
+                document.getElementById('detail-component-title').textContent = 'Buttons';
+            }
         }
+
+        function closeComponentDetail() {
+            document.getElementById('components-main-screen').classList.remove('hidden');
+            document.getElementById('component-detail-screen').classList.remove('active');
+        }
+
+        // Live Preview Update for Component Detail
+        function updateButtonPreview() {
+            const buttonText = document.getElementById('button-text-input').value;
+            const radius = document.getElementById('radius-input').value;
+            const primaryColor = document.getElementById('primary-color-input').value;
+            const textColor = document.getElementById('text-color-input').value;
+
+            // Update the SVG preview
+            const svg = document.getElementById('button-preview-svg');
+
+            // Calculate button width based on text length with proper spacing
+            // Layout: [20px padding] [32px icon] [8px gap] [text] [8px gap] [32px icon] [20px padding]
+            const minWidth = 127;
+            const maxWidth = 400;
+            const charWidth = 12; // approximate width per character
+            const iconWidth = 32; // each icon is 32px
+            const gap = 8; // 8px gap between icon and text
+            const sidePadding = 20; // padding on each side
+
+            const textWidth = buttonText.length * charWidth;
+            const totalWidth = (sidePadding * 2) + (iconWidth * 2) + (gap * 2) + textWidth;
+            let calculatedWidth = Math.max(minWidth, Math.min(maxWidth, totalWidth));
+
+            // Update SVG dimensions
+            svg.setAttribute('width', calculatedWidth);
+            svg.setAttribute('viewBox', `0 0 ${calculatedWidth} 75`);
+
+            // Update background color and radius
+            const rect = svg.querySelector('rect');
+            if (rect) {
+                rect.setAttribute('width', calculatedWidth);
+                rect.setAttribute('fill', primaryColor);
+                // Clamp radius to reasonable values (max 37.5 which is half of height 75)
+                const clampedRadius = Math.min(Math.max(0, radius), 37.5);
+                rect.setAttribute('rx', clampedRadius);
+            }
+
+            // Calculate positions with 8px gaps
+            const leftIconX = sidePadding;
+            const textX = calculatedWidth / 2;
+            const rightIconX = calculatedWidth - sidePadding - iconWidth;
+
+            // Update text content, color, and position (center)
+            const textElement = svg.querySelector('text');
+            if (textElement) {
+                textElement.textContent = buttonText;
+                textElement.setAttribute('fill', textColor);
+                textElement.setAttribute('x', textX);
+            }
+
+            // Update icon positions - only get direct children g elements
+            const allChildren = Array.from(svg.children);
+            const iconGroups = allChildren.filter(child => child.tagName === 'g');
+            if (iconGroups.length >= 2) {
+                // Left icon with proper positioning
+                iconGroups[0].setAttribute('transform', `translate(${leftIconX}, 21.5)`);
+                // Right icon with proper positioning
+                iconGroups[1].setAttribute('transform', `translate(${rightIconX}, 21.5)`);
+            }
+
+            // Update icon colors
+            const paths = svg.querySelectorAll('path');
+            paths.forEach(path => {
+                path.setAttribute('fill', textColor);
+            });
+
+            // Update color circle previews
+            document.getElementById('primary-color-circle').style.background = primaryColor;
+            document.getElementById('text-color-circle').style.background = textColor;
+
+            // Update text color circle border if it's white or light color
+            const textColorCircle = document.getElementById('text-color-circle');
+            const rgb = hexToRgb(textColor);
+            if (rgb && (rgb.r > 240 && rgb.g > 240 && rgb.b > 240)) {
+                textColorCircle.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+            } else {
+                textColorCircle.style.border = 'none';
+            }
+        }
+
+        // Helper function to convert hex to RGB
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // Add event listeners when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            // Button text input
+            const buttonTextInput = document.getElementById('button-text-input');
+            if (buttonTextInput) {
+                buttonTextInput.addEventListener('input', updateButtonPreview);
+            }
+
+            // Radius input
+            const radiusInput = document.getElementById('radius-input');
+            if (radiusInput) {
+                radiusInput.addEventListener('input', updateButtonPreview);
+            }
+
+            // Primary color input
+            const primaryColorInput = document.getElementById('primary-color-input');
+            if (primaryColorInput) {
+                primaryColorInput.addEventListener('input', function () {
+                    updateButtonPreview();
+                });
+            }
+
+            // Text color input
+            const textColorInput = document.getElementById('text-color-input');
+            if (textColorInput) {
+                textColorInput.addEventListener('input', function () {
+                    updateButtonPreview();
+                });
+            }
+
+            // Color circle click handlers - open native color picker
+            const primaryColorCircle = document.getElementById('primary-color-circle');
+            const primaryColorPicker = document.getElementById('primary-color-picker');
+            if (primaryColorCircle && primaryColorPicker) {
+                primaryColorCircle.addEventListener('click', function () {
+                    primaryColorPicker.click();
+                });
+
+                // Update text input and preview when color picker changes
+                primaryColorPicker.addEventListener('input', function () {
+                    primaryColorInput.value = primaryColorPicker.value.toUpperCase();
+                    updateButtonPreview();
+                });
+            }
+
+            const textColorCircle = document.getElementById('text-color-circle');
+            const textColorPicker = document.getElementById('text-color-picker');
+            if (textColorCircle && textColorPicker) {
+                textColorCircle.addEventListener('click', function () {
+                    textColorPicker.click();
+                });
+
+                // Update text input and preview when color picker changes
+                textColorPicker.addEventListener('input', function () {
+                    textColorInput.value = textColorPicker.value.toUpperCase();
+                    updateButtonPreview();
+                });
+            }
+
+            // Sync color pickers with text inputs
+            if (primaryColorInput && primaryColorPicker) {
+                primaryColorInput.addEventListener('change', function () {
+                    if (/^#[0-9A-F]{6}$/i.test(primaryColorInput.value)) {
+                        primaryColorPicker.value = primaryColorInput.value;
+                    }
+                });
+            }
+
+            if (textColorInput && textColorPicker) {
+                textColorInput.addEventListener('change', function () {
+                    if (/^#[0-9A-F]{6}$/i.test(textColorInput.value)) {
+                        textColorPicker.value = textColorInput.value;
+                    }
+                });
+            }
+        });
 
         // Typography Functions
         let secondaryFontEnabled = false;
@@ -3578,11 +4487,6 @@
             document.getElementById('base-font-size').addEventListener('change', generateTypographyPreview);
             document.getElementById('primary-font').addEventListener('input', generateTypographyPreview);
         });
-
-        function closeComponentDetail() {
-            document.getElementById('components-grid').style.display = 'grid';
-            document.getElementById('component-detail').classList.remove('active');
-        }
 
         // Setup Option Selection
         function selectSetupOption(element, type) {
