@@ -3506,7 +3506,7 @@
                                         <div class="component-card-variant-count">36 Variant</div>
                                     </div>
                                 </div>
-                                <div class="component-card">
+                                <div class="component-card" onclick="openComponentDetail('textfield')">
                                     <div class="component-card-preview">
                                         <!-- Text Field Preview -->
                                         <svg width="200" height="60" viewBox="0 0 200 60" fill="none"
@@ -3522,9 +3522,6 @@
                                     <div class="component-card-footer">
                                         <div class="component-card-title">Text Filed</div>
                                         <div class="component-card-variant-count">15 Variant</div>
-                                    </div>
-                                    <div class="component-coming-soon-overlay">
-                                        <div class="component-coming-soon-text">Coming Soon</div>
                                     </div>
                                 </div>
                                 <div class="component-card">
@@ -3770,6 +3767,138 @@
                         </div>
                         <div class="component-detail-footer">
                             <div class="component-detail-footer-text">Generate Component Set With Icons</div>
+                            <button class="component-detail-add-button">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 3.75V14.25" stroke="white" stroke-width="2" stroke-linecap="round" />
+                                    <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                                Add Component Set
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Text Field Detail Screen -->
+                    <div class="component-detail-screen" id="textfield-detail-screen">
+                        <div class="component-detail-header" onclick="closeComponentDetail()">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.25 13.5L6.75 9L11.25 4.5" stroke="black" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span class="component-detail-back-text">Back</span>
+                        </div>
+                        <div class="component-detail-content">
+                            <div class="component-detail-info">
+                                <div class="component-detail-title-section">
+                                    <div class="component-detail-title">Text Filed</div>
+                                    <div class="component-detail-description">Meet the 15 Variant, a sleek and
+                                        innovative solution that enhances your experience. Perfect for those who value
+                                        style and functionality, this product seamlessly fits into your daily routine.
+                                    </div>
+                                </div>
+                                <div class="component-detail-properties">
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Label Text</div>
+                                        <input type="text" class="component-property-input" id="textfield-label-input"
+                                            value="Label" oninput="updateTextFieldPreview()">
+                                    </div>
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Radius</div>
+                                        <div class="component-property-input-wrapper">
+                                            <input type="number" id="textfield-radius-input" value="5"
+                                                oninput="updateTextFieldPreview()">
+                                            <span class="component-property-input-suffix">PX</span>
+                                        </div>
+                                    </div>
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Border Color</div>
+                                        <div class="component-property-color-picker" style="position: relative;">
+                                            <input type="text" class="component-property-color-hex"
+                                                id="textfield-border-color-input" value="#E9EAEB"
+                                                oninput="updateTextFieldPreview()">
+                                            <input type="color" id="textfield-border-color-picker" value="#E9EAEB"
+                                                style="position: absolute; bottom: -45px; right: 0; width: 50px; height: 40px; border: none; cursor: pointer; opacity: 0;">
+                                            <div class="component-property-color-circle"
+                                                id="textfield-border-color-circle" style="background: #E9EAEB;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="component-property-field">
+                                        <div class="component-property-label">Background Color</div>
+                                        <div class="component-property-color-picker" style="position: relative;">
+                                            <input type="text" class="component-property-color-hex"
+                                                id="textfield-bg-color-input" value="#FFFFFF"
+                                                oninput="updateTextFieldPreview()">
+                                            <input type="color" id="textfield-bg-color-picker" value="#FFFFFF"
+                                                style="position: absolute; bottom: -45px; right: 0; width: 50px; height: 40px; border: none; cursor: pointer; opacity: 0;">
+                                            <div class="component-property-color-circle" id="textfield-bg-color-circle"
+                                                style="background: #FFFFFF; border: 1px solid rgba(0, 0, 0, 0.1);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="component-detail-preview">
+                                <svg width="354" height="105" viewBox="0 0 354 105" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg" id="textfield-preview-svg">
+                                    <!-- Label with asterisk and info icon -->
+                                    <text x="0" y="15" font-family="Poppins" font-size="15.4875" font-weight="500"
+                                        fill="#454A53" id="textfield-label-preview">Label</text>
+                                    <text x="45" y="15" font-family="Poppins" font-size="15.4875" font-weight="500"
+                                        fill="#FF5C02" id="textfield-asterisk-preview">*</text>
+
+                                    <!-- Info icon -->
+                                    <g id="textfield-info-icon-group" transform="translate(65, 0)">
+                                        <circle cx="0" cy="10" r="9" fill="#9EA2AD" opacity="0.3" />
+                                        <circle cx="0" cy="10" r="9" fill="none" stroke="#9EA2AD" stroke-width="1.5" />
+                                        <circle cx="0" cy="6.5" r="1.2" fill="#9EA2AD" />
+                                        <rect x="-1" y="9" width="2" height="5" rx="0.5" fill="#9EA2AD" />
+                                    </g>
+
+                                    <!-- Input field background -->
+                                    <rect x="0" y="28" width="354" height="48.67" rx="8.85" fill="white"
+                                        stroke="#E9EAEB" stroke-width="1.10625" id="textfield-rect-preview" />
+
+                                    <!-- Left icon (user/identity icon) -->
+                                    <g transform="translate(13.275, 39.33)">
+                                        <circle cx="11" cy="11" r="10.5" fill="none" stroke="#9EA2AD"
+                                            stroke-width="1.8" />
+                                        <circle cx="11" cy="7.5" r="3.5" fill="none" stroke="#9EA2AD"
+                                            stroke-width="1.8" />
+                                        <path d="M4 18 C4 14, 6.5 12.5, 11 12.5 C15.5 12.5, 18 14, 18 18"
+                                            stroke="#9EA2AD" stroke-width="1.8" fill="none" stroke-linecap="round" />
+                                    </g>
+
+                                    <!-- Placeholder text -->
+                                    <text x="48" y="56" font-family="Poppins" font-size="15.4875" font-weight="400"
+                                        fill="#9EA2AD" id="textfield-placeholder-preview">Placeholder
+                                        text...</text>
+
+                                    <!-- Right icon (help/question icon) -->
+                                    <g transform="translate(320, 39.33)">
+                                        <circle cx="11" cy="11" r="10.5" fill="none" stroke="#9EA2AD"
+                                            stroke-width="1.8" />
+                                        <path
+                                            d="M8 8.5 C8 6.5, 9 5.5, 11 5.5 C13 5.5, 14 6.5, 14 8 C14 9.5, 13 10, 11.5 10.5 C11 10.7, 11 11, 11 11.5"
+                                            stroke="#9EA2AD" stroke-width="1.8" fill="none" stroke-linecap="round" />
+                                        <circle cx="11" cy="15" r="1" fill="#9EA2AD" />
+                                    </g>
+
+                                    <!-- Hint text with info icon -->
+                                    <circle cx="9" cy="90" r="8.5" fill="#9EA2AD" opacity="0.3" />
+                                    <circle cx="9" cy="90" r="8.5" fill="none" stroke="#9EA2AD" stroke-width="1.5" />
+                                    <circle cx="9" cy="87" r="1.2" fill="#9EA2AD" />
+                                    <rect x="8" y="89.5" width="2" height="4.5" rx="0.5" fill="#9EA2AD" />
+                                    <text x="22" y="95" font-family="Poppins" font-size="15.4875" font-weight="400"
+                                        fill="#9EA2AD">Hint text to help users</text>
+                                </svg>
+                                <div class="component-detail-variant-badge">
+                                    <div class="component-detail-variant-text">15 Variant</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="component-detail-footer">
+                            <div class="component-detail-footer-text">Generate Component Set</div>
                             <button class="component-detail-add-button">
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -4071,17 +4200,19 @@
         // Component Detail Toggle
         function openComponentDetail(componentType) {
             document.getElementById('components-main-screen').classList.add('hidden');
-            document.getElementById('component-detail-screen').classList.add('active');
 
-            // Update title based on component type
             if (componentType === 'buttons') {
+                document.getElementById('component-detail-screen').classList.add('active');
                 document.getElementById('detail-component-title').textContent = 'Buttons';
+            } else if (componentType === 'textfield') {
+                document.getElementById('textfield-detail-screen').classList.add('active');
             }
         }
 
         function closeComponentDetail() {
             document.getElementById('components-main-screen').classList.remove('hidden');
             document.getElementById('component-detail-screen').classList.remove('active');
+            document.getElementById('textfield-detail-screen').classList.remove('active');
         }
 
         // Live Preview Update for Component Detail
@@ -4246,6 +4377,142 @@
                 textColorInput.addEventListener('change', function () {
                     if (/^#[0-9A-F]{6}$/i.test(textColorInput.value)) {
                         textColorPicker.value = textColorInput.value;
+                    }
+                });
+            }
+        });
+
+        // Text Field Preview Update Functions
+        function updateTextFieldPreview() {
+            const labelText = document.getElementById('textfield-label-input').value;
+            const radius = document.getElementById('textfield-radius-input').value;
+            const borderColor = document.getElementById('textfield-border-color-input').value;
+            const bgColor = document.getElementById('textfield-bg-color-input').value;
+
+            // Update the SVG preview
+            const labelPreview = document.getElementById('textfield-label-preview');
+            const rectPreview = document.getElementById('textfield-rect-preview');
+            const asteriskPreview = document.getElementById('textfield-asterisk-preview');
+            const infoIconGroup = document.getElementById('textfield-info-icon-group');
+
+            if (labelPreview) {
+                // Update label text
+                labelPreview.textContent = labelText;
+
+                // Get actual text width using SVG's built-in method
+                const textWidth = labelPreview.getComputedTextLength();
+
+                // Update asterisk position (2px gap after label)
+                if (asteriskPreview) {
+                    asteriskPreview.setAttribute('x', textWidth + 2);
+                }
+
+                // Update info icon position (2px gap after asterisk)
+                // Get asterisk width dynamically
+                if (infoIconGroup && asteriskPreview) {
+                    const asteriskWidth = asteriskPreview.getComputedTextLength();
+                    // The info icon circle has radius 9, so we need to position it at center + 9
+                    // to account for the circle's left edge
+                    const iconX = textWidth + 2 + asteriskWidth + 2 + 9; // label + gap + asterisk + gap + radius
+                    infoIconGroup.setAttribute('transform', `translate(${iconX}, 0)`);
+                }
+            }
+
+            if (rectPreview) {
+                // Clamp radius to reasonable values
+                const clampedRadius = Math.min(Math.max(0, radius), 24);
+                rectPreview.setAttribute('rx', clampedRadius);
+                rectPreview.setAttribute('stroke', borderColor);
+                rectPreview.setAttribute('fill', bgColor);
+            }
+
+            // Update color circle previews
+            const borderColorCircle = document.getElementById('textfield-border-color-circle');
+            const bgColorCircle = document.getElementById('textfield-bg-color-circle');
+
+            if (borderColorCircle) {
+                borderColorCircle.style.background = borderColor;
+            }
+
+            if (bgColorCircle) {
+                bgColorCircle.style.background = bgColor;
+
+                // Update background color circle border if it's white or light color
+                const rgb = hexToRgb(bgColor);
+                if (rgb && (rgb.r > 240 && rgb.g > 240 && rgb.b > 240)) {
+                    bgColorCircle.style.border = '1px solid rgba(0, 0, 0, 0.1)';
+                } else {
+                    bgColorCircle.style.border = 'none';
+                }
+            }
+        }
+
+        // Add event listeners for text field inputs
+        document.addEventListener('DOMContentLoaded', function () {
+            // Text field label input
+            const textfieldLabelInput = document.getElementById('textfield-label-input');
+            if (textfieldLabelInput) {
+                textfieldLabelInput.addEventListener('input', updateTextFieldPreview);
+            }
+
+            // Text field radius input
+            const textfieldRadiusInput = document.getElementById('textfield-radius-input');
+            if (textfieldRadiusInput) {
+                textfieldRadiusInput.addEventListener('input', updateTextFieldPreview);
+            }
+
+            // Text field border color input
+            const textfieldBorderColorInput = document.getElementById('textfield-border-color-input');
+            if (textfieldBorderColorInput) {
+                textfieldBorderColorInput.addEventListener('input', updateTextFieldPreview);
+            }
+
+            // Text field background color input
+            const textfieldBgColorInput = document.getElementById('textfield-bg-color-input');
+            if (textfieldBgColorInput) {
+                textfieldBgColorInput.addEventListener('input', updateTextFieldPreview);
+            }
+
+            // Color circle click handlers for text field
+            const textfieldBorderColorCircle = document.getElementById('textfield-border-color-circle');
+            const textfieldBorderColorPicker = document.getElementById('textfield-border-color-picker');
+            if (textfieldBorderColorCircle && textfieldBorderColorPicker) {
+                textfieldBorderColorCircle.addEventListener('click', function () {
+                    textfieldBorderColorPicker.click();
+                });
+
+                textfieldBorderColorPicker.addEventListener('input', function () {
+                    textfieldBorderColorInput.value = textfieldBorderColorPicker.value.toUpperCase();
+                    updateTextFieldPreview();
+                });
+            }
+
+            const textfieldBgColorCircle = document.getElementById('textfield-bg-color-circle');
+            const textfieldBgColorPicker = document.getElementById('textfield-bg-color-picker');
+            if (textfieldBgColorCircle && textfieldBgColorPicker) {
+                textfieldBgColorCircle.addEventListener('click', function () {
+                    textfieldBgColorPicker.click();
+                });
+
+                textfieldBgColorPicker.addEventListener('input', function () {
+                    textfieldBgColorInput.value = textfieldBgColorPicker.value.toUpperCase();
+                    updateTextFieldPreview();
+                });
+            }
+
+            // Sync color pickers with text inputs for text field
+            if (textfieldBorderColorInput && textfieldBorderColorPicker) {
+                textfieldBorderColorInput.addEventListener('change', function () {
+                    if (/^#[0-9A-F]{6}$/i.test(textfieldBorderColorInput.value)) {
+                        textfieldBorderColorPicker.value = textfieldBorderColorInput.value;
+                    }
+                });
+            }
+
+            if (textfieldBgColorInput && textfieldBgColorPicker) {
+                textfieldBgColorInput.addEventListener('change', function () {
+                    if (/^#[0-9A-F]{6}$/i.test(textfieldBgColorInput.value)) {
+                        textfieldBgColorPicker.value = textfieldBgColorInput.value;
                     }
                 });
             }
