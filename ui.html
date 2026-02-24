@@ -2012,24 +2012,193 @@
         }
 
         /* Icons Tab */
-        .icons-selection-layout-unique {
-            padding: 16px;
+        .icons-tab-wrapper-unique {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+            background: #FFFFFF;
+            border-radius: 0px 0px 15px 0px;
         }
 
-        .icons-library-select-unique,
+        .icons-selection-layout-unique {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 24px;
+            gap: 16px;
+            width: 100%;
+            flex: none;
+            order: 0;
+            align-self: stretch;
+        }
+
+        .icons-library-field-unique {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 8px;
+            width: 100%;
+            align-self: stretch;
+        }
+
+        .icons-library-label-unique {
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: #000000;
+        }
+
+        .icons-library-select-wrapper-unique {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 10px 10px 14px;
+            gap: 90px;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            align-self: stretch;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .icons-library-select-unique {
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.6);
+            border: none;
+            outline: none;
+            background: transparent;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .icons-category-field-unique {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 8px;
+            width: 100%;
+            align-self: stretch;
+        }
+
+        .icons-category-label-unique {
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: #000000;
+        }
+
+        .icons-category-select-wrapper-unique {
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 10px 10px 14px;
+            gap: 90px;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 100px;
+            align-self: stretch;
+            position: relative;
+            cursor: pointer;
+        }
+
         .icons-category-select-unique {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.6);
+            border: none;
+            outline: none;
+            background: transparent;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .icons-dropdown-icon-unique {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: 10px;
+            pointer-events: none;
         }
 
         .icons-footer-wrapper-unique {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
             padding: 12px;
-            border-top: 1px solid #ddd;
+            gap: 8px;
+            width: 100%;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            flex: none;
+            order: 1;
+            align-self: stretch;
+        }
+
+        .icons-footer-text-unique {
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 160%;
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        .icons-footer-button-unique {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 16px 8px 16px;
+            gap: 8px;
+            background: #4F46E5;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icons-footer-button-unique:hover {
+            background: #4338CA;
+        }
+
+        .icons-footer-button-icon-unique {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icons-footer-button-text-unique {
+            font-family: 'Poppins', sans-serif;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 150%;
+            text-align: center;
+            color: #FFFFFF;
         }
     </style>
 </head>
@@ -3916,20 +4085,56 @@
             <div class="tab-section" id="icons-tab">
                 <div class="icons-tab-wrapper-unique">
                     <div class="icons-selection-layout-unique">
-                        <select class="icons-library-select-unique">
-                            <option>Select Icon Library</option>
-                            <option>Material Icons</option>
-                            <option>Feather Icons</option>
-                        </select>
-                        <select class="icons-category-select-unique">
-                            <option>Select Category</option>
-                            <option>Actions</option>
-                            <option>Navigation</option>
-                        </select>
-                        <p>Icon grid will appear here</p>
+                        <!-- Icon Library Field -->
+                        <div class="icons-library-field-unique">
+                            <label class="icons-library-label-unique">Icon Library</label>
+                            <div class="icons-library-select-wrapper-unique">
+                                <select class="icons-library-select-unique">
+                                    <option>Select Icon Library</option>
+                                    <option>Material Icons</option>
+                                    <option>Feather Icons</option>
+                                    <option>Heroicons</option>
+                                    <option>Font Awesome</option>
+                                </select>
+                                <svg class="icons-dropdown-icon-unique" viewBox="0 0 20 20" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.83333 8.33333L10 12.5L14.1667 8.33333" stroke="rgba(0, 0, 0, 0.5)"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Category Field -->
+                        <div class="icons-category-field-unique">
+                            <label class="icons-category-label-unique">Category</label>
+                            <div class="icons-category-select-wrapper-unique">
+                                <select class="icons-category-select-unique">
+                                    <option>Select Category</option>
+                                    <option>Actions</option>
+                                    <option>Navigation</option>
+                                    <option>Communication</option>
+                                    <option>Media</option>
+                                </select>
+                                <svg class="icons-dropdown-icon-unique" viewBox="0 0 20 20" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.83333 8.33333L10 12.5L14.1667 8.33333" stroke="rgba(0, 0, 0, 0.5)"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Footer -->
                     <div class="icons-footer-wrapper-unique">
-                        <p>Icon Library Footer</p>
+                        <span class="icons-footer-text-unique">Generate Full Icon Component</span>
+                        <button class="icons-footer-button-unique">
+                            <svg class="icons-footer-button-icon-unique" viewBox="0 0 18 18" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 3.75V14.25M3.75 9H14.25" stroke="#FFFFFF" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span class="icons-footer-button-text-unique">Add Icons Library</span>
+                        </button>
                     </div>
                 </div>
             </div>
