@@ -4338,6 +4338,15 @@
                         numberOfTokens: numberOfTokens
                     }
                 }, '*');
+
+                // Also create the padding documentation
+                parent.postMessage({
+                    pluginMessage: {
+                        type: 'create-padding-doc',
+                        baseValue: selectedPaddingBase,
+                        numberOfTokens: numberOfTokens
+                    }
+                }, '*');
             } else if (activePanel.id === 'token-radius-content') {
                 const dropdown = document.querySelector('#radius-count-select');
                 const numberOfTokens = parseInt(dropdown.value);
