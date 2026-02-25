@@ -1669,6 +1669,269 @@ figma.ui.onmessage = async (msg) => {
         }
     }
 
+    if (msg.type === "create-grid-doc") {
+        try {
+            const grids = msg.grids;
+
+            // Load fonts
+            await figma.loadFontAsync({ family: "Poppins", style: "SemiBold" });
+            await figma.loadFontAsync({ family: "Montserrat", style: "Medium" });
+            await figma.loadFontAsync({ family: "Inter", style: "Medium" });
+            await figma.loadFontAsync({ family: "Inter", style: "Regular" });
+            await figma.loadFontAsync({ family: "Inter", style: "Bold" });
+
+            // Helper function to convert hex to RGB
+            function hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) {
+                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                }
+                const r = parseInt(hex.substring(0, 2), 16) / 255;
+                const g = parseInt(hex.substring(2, 4), 16) / 255;
+                const b = parseInt(hex.substring(4, 6), 16) / 255;
+                return { r, g, b };
+            }
+
+            // Create main frame
+            const frame = figma.createFrame();
+            frame.name = "Token Grid";
+            frame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+            frame.paddingTop = 40;
+            frame.paddingBottom = 40;
+            frame.paddingLeft = 40;
+            frame.paddingRight = 40;
+            frame.layoutMode = "VERTICAL";
+            frame.primaryAxisSizingMode = "AUTO";
+            frame.counterAxisSizingMode = "AUTO";
+            frame.itemSpacing = 40;
+
+            // Add top border
+            const borderColor = hexToRgb('#1350FF');
+            frame.strokes = [{ type: 'SOLID', color: borderColor }];
+            frame.strokeWeight = 8;
+            frame.strokeAlign = "INSIDE";
+            frame.strokeTopWeight = 8;
+            frame.strokeBottomWeight = 0;
+            frame.strokeLeftWeight = 0;
+            frame.strokeRightWeight = 0;
+
+            // Title section
+            const titleSection = figma.createFrame();
+            titleSection.name = "Title Section";
+            titleSection.layoutMode = "VERTICAL";
+            titleSection.primaryAxisSizingMode = "AUTO";
+            titleSection.counterAxisSizingMode = "AUTO";
+            titleSection.itemSpacing = 34;
+            titleSection.fills = [];
+
+            // Create logo from SVG
+            const logoSvg = `<svg width="224" height="32" viewBox="0 0 224 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_466_1736)"><g clip-path="url(#clip1_466_1736)"><path d="M47.9502 22.765C46.7073 22.0781 45.7261 21.1295 45.0065 19.952C44.2869 18.7418 43.9271 17.4008 43.9271 15.8962C43.9271 14.3916 44.2869 13.0506 45.0065 11.8404C45.7261 10.6302 46.7073 9.71438 47.9502 9.0275C49.1931 8.34063 50.5996 8.01355 52.1696 8.01355C53.4125 8.01355 54.59 8.24251 55.604 8.66771C56.6506 9.09292 57.5337 9.74708 58.2533 10.5648L56.4217 12.2983C55.3096 11.0881 53.9358 10.4994 52.3004 10.4994C51.2538 10.4994 50.3052 10.7283 49.4548 11.1862C48.6044 11.6442 47.9829 12.2983 47.4923 13.116C47.0344 13.9337 46.8054 14.8496 46.8054 15.8962C46.8054 16.9429 47.0344 17.8587 47.4923 18.6764C47.9502 19.4941 48.6044 20.1483 49.4548 20.6062C50.3052 21.0641 51.2211 21.2931 52.3004 21.2931C53.9358 21.2931 55.3096 20.6716 56.4217 19.4614L58.2533 21.2277C57.5337 22.0781 56.6506 22.6995 55.604 23.1247C54.5573 23.5499 53.4125 23.7789 52.1369 23.7789C50.5996 23.7789 49.1931 23.4191 47.9502 22.765Z" fill="black"/><path d="M63.6175 22.7649C62.3745 22.0781 61.3606 21.1295 60.641 19.9193C59.9214 18.7091 59.5616 17.3681 59.5616 15.8635C59.5616 14.3589 59.9214 13.0179 60.641 11.8077C61.3606 10.5975 62.3418 9.64895 63.6175 8.96207C64.8604 8.2752 66.2995 7.94812 67.8695 7.94812C69.4395 7.94812 70.846 8.2752 72.1216 8.96207C73.3645 9.64895 74.3785 10.5975 75.098 11.775C75.8176 12.9852 76.1774 14.3262 76.1774 15.8308C76.1774 17.3354 75.8176 18.6764 75.098 19.8866C74.3785 21.0968 73.3972 22.0126 72.1216 22.6995C70.8787 23.3864 69.4395 23.7135 67.8695 23.7135C66.2995 23.7789 64.8604 23.4191 63.6175 22.7649ZM70.617 20.5735C71.4347 20.1156 72.0889 19.4614 72.5468 18.6437C73.0047 17.826 73.2337 16.8775 73.2337 15.8635C73.2337 14.8496 73.0047 13.901 72.5468 13.0833C72.0889 12.2656 71.4347 11.6114 70.617 11.1535C69.7993 10.6956 68.8835 10.4667 67.8368 10.4667C66.8229 10.4667 65.8743 10.6956 65.0566 11.1535C64.2389 11.6114 63.5848 12.2656 63.1268 13.0833C62.6689 13.901 62.44 14.8496 62.44 15.8635C62.44 16.8775 62.6689 17.826 63.1268 18.6437C63.5848 19.4614 64.2389 20.1156 65.0566 20.5735C65.8743 21.0314 66.7902 21.2604 67.8368 21.2604C68.8835 21.2604 69.7993 21.0314 70.617 20.5735Z" fill="black"/><path d="M79.1539 8.17706H85.8591C87.4945 8.17706 88.9663 8.50414 90.242 9.1256C91.5176 9.74706 92.4988 10.6629 93.2184 11.8404C93.9053 13.0179 94.2651 14.3589 94.2651 15.8635C94.2651 17.4008 93.9053 18.7418 93.2184 19.8866C92.5315 21.0641 91.5176 21.9472 90.242 22.6014C88.9663 23.2228 87.5272 23.5499 85.8918 23.5499H79.1539V8.17706ZM85.7282 21.1295C86.8403 21.1295 87.8543 20.9006 88.7047 20.4753C89.5551 20.0501 90.2093 19.4287 90.6672 18.6437C91.1251 17.8587 91.354 16.9102 91.354 15.8635C91.354 14.8168 91.1251 13.8683 90.6672 13.0833C90.2093 12.2983 89.5551 11.6768 88.7047 11.2516C87.8543 10.8264 86.8403 10.5975 85.7282 10.5975H81.9995V21.1295H85.7282Z" fill="black"/><path d="M108.82 21.1622V23.5499H97.3069V8.17706H108.526V10.5648H100.153V14.5552H107.577V16.9102H100.153V21.1622H108.82Z" fill="black"/><path d="M115.133 10.5975H110.03V8.17706H123.081V10.5975H117.978V23.5499H115.133V10.5975Z" fill="black"/><path d="M138.879 8.17706V23.5499H136.033V16.9756H128.085V23.5499H125.24V8.17706H128.085V14.5225H136.033V8.17706H138.879Z" fill="black"/><path d="M154.514 21.1622V23.5499H143V8.17706H154.219V10.5648H145.846V14.5552H153.271V16.9102H145.846V21.1622H154.514Z" fill="black"/><path d="M160.597 22.7649C159.354 22.0781 158.34 21.1295 157.621 19.9193C156.901 18.7091 156.542 17.3681 156.542 15.8635C156.542 14.3589 156.901 13.0179 157.621 11.8077C158.34 10.5975 159.322 9.64895 160.597 8.96207C161.873 8.2752 163.279 7.94812 164.849 7.94812C166.419 7.94812 167.826 8.2752 169.101 8.96207C170.344 9.64895 171.358 10.5975 172.078 11.775C172.797 12.9852 173.157 14.3262 173.157 15.8308C173.157 17.3354 172.797 18.6764 172.078 19.8866C171.358 21.0968 170.377 22.0126 169.101 22.6995C167.859 23.3864 166.419 23.7135 164.849 23.7135C163.247 23.7789 161.84 23.4191 160.597 22.7649ZM167.597 20.5735C168.415 20.1156 169.069 19.4614 169.527 18.6437C169.985 17.826 170.214 16.8775 170.214 15.8635C170.214 14.8496 169.985 13.901 169.527 13.0833C169.069 12.2656 168.415 11.6114 167.597 11.1535C166.779 10.6956 165.863 10.4667 164.817 10.4667C163.803 10.4667 162.854 10.6956 162.036 11.1535C161.219 11.6114 160.565 12.2656 160.107 13.0833C159.649 13.901 159.42 14.8496 159.42 15.8635C159.42 16.8775 159.649 17.826 160.107 18.6437C160.565 19.4614 161.219 20.1156 162.036 20.5735C162.854 21.0314 163.77 21.2604 164.817 21.2604C165.863 21.2604 166.779 21.0314 167.597 20.5735Z" fill="black"/><path d="M186.175 23.5499L183.035 19.0362C182.904 19.0362 182.708 19.0689 182.446 19.0689H178.979V23.5499H176.134V8.17706H182.446C183.787 8.17706 184.932 8.40602 185.913 8.83123C186.895 9.25643 187.647 9.9106 188.17 10.7283C188.694 11.546 188.955 12.5273 188.955 13.6393C188.955 14.7841 188.661 15.7981 188.105 16.6158C187.549 17.4662 186.731 18.0877 185.685 18.4801L189.25 23.5499H186.175ZM185.161 11.3825C184.507 10.8591 183.558 10.5975 182.316 10.5975H178.979V16.7139H182.316C183.558 16.7139 184.507 16.4522 185.161 15.8962C185.815 15.3729 186.142 14.6206 186.142 13.6393C186.11 12.6581 185.815 11.9058 185.161 11.3825Z" fill="black"/><path d="M203.707 21.1622V23.5499H192.193V8.17706H203.412V10.5648H195.039V14.5552H202.464V16.9102H195.039V21.1622H203.707Z" fill="black"/><path d="M221.009 23.5499L220.977 13.3777L215.94 21.8164H214.664L209.627 13.5085V23.5499H206.912V8.17706H209.267L215.384 18.3493L221.336 8.17706H223.691L223.724 23.5499H221.009Z" fill="black"/><path d="M34.1474 24.5312H1.83165C0.327072 24.5312 -0.523342 22.8303 0.392488 21.6201L15.9943 1.01395C17.041 -0.359794 19.1016 -0.359794 20.1155 1.01395L35.6192 21.5874C36.5023 22.7976 35.6519 24.5312 34.1474 24.5312Z" fill="url(#paint0_linear_466_1736)"/><path d="M4.15395 28.5215L16.7466 11.9385C17.5643 10.8591 19.167 10.8918 19.952 11.9385L32.4465 28.5215C33.4278 29.8626 32.512 31.727 30.8438 31.727H5.75665C4.08853 31.727 3.14 29.8299 4.15395 28.5215Z" fill="url(#paint1_linear_466_1736)"/><path d="M29.4047 24.5312L19.952 11.9385C19.1343 10.8591 17.5643 10.8591 16.7466 11.9385L7.1958 24.5312H29.4047Z" fill="#6699FF"/></g></g><defs><linearGradient id="paint0_linear_466_1736" x1="0.0140991" y1="12.2574" x2="35.977" y2="12.2574" gradientUnits="userSpaceOnUse"><stop stop-color="#3F71FF"/><stop offset="1" stop-color="#6A73FF"/></linearGradient><linearGradient id="paint1_linear_466_1736" x1="3.73645" y1="21.4341" x2="32.8498" y2="21.4341" gradientUnits="userSpaceOnUse"><stop stop-color="#3F71FF"/><stop offset="1" stop-color="#6A73FF"/></linearGradient><clipPath id="clip0_466_1736"><rect width="224" height="31.727" fill="white"/></clipPath><clipPath id="clip1_466_1736"><rect width="223.724" height="31.727" fill="white"/></clipPath></defs></svg>`;
+
+            const logo = figma.createNodeFromSvg(logoSvg);
+            logo.name = "logo - Horizontal";
+            logo.resize(224, 31.73);
+
+            // Header Section frame
+            const headerSection = figma.createFrame();
+            headerSection.name = "Header Section";
+            headerSection.layoutMode = "VERTICAL";
+            headerSection.primaryAxisSizingMode = "AUTO";
+            headerSection.counterAxisSizingMode = "AUTO";
+            headerSection.itemSpacing = 6;
+            headerSection.fills = [];
+
+            // Title text
+            const titleText = figma.createText();
+            titleText.characters = "Grid";
+            titleText.fontSize = 40;
+            titleText.fontName = { family: "Poppins", style: "SemiBold" };
+            titleText.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
+            titleText.lineHeight = { value: 150, unit: "PERCENT" };
+
+            // Subtitle text
+            const subtitleText = figma.createText();
+            subtitleText.characters = "Responsive grid layouts for Desktop, Tablet, and Mobile.";
+            subtitleText.fontSize = 16;
+            subtitleText.fontName = { family: "Montserrat", style: "Medium" };
+            subtitleText.fills = [{ type: 'SOLID', color: hexToRgb('#444445') }];
+            subtitleText.lineHeight = { value: 160, unit: "PERCENT" };
+            subtitleText.letterSpacing = { value: 0.032, unit: "PIXELS" };
+
+            headerSection.appendChild(titleText);
+            headerSection.appendChild(subtitleText);
+
+            titleSection.appendChild(logo);
+            titleSection.appendChild(headerSection);
+            frame.appendChild(titleSection);
+
+            const tokenGrid = figma.createFrame();
+            tokenGrid.name = "Token Grid";
+            tokenGrid.layoutMode = "VERTICAL";
+            tokenGrid.primaryAxisSizingMode = "AUTO";
+            tokenGrid.counterAxisSizingMode = "AUTO";
+            tokenGrid.itemSpacing = 24;
+            tokenGrid.fills = [];
+
+            // Grid configurations
+            const gridConfigs = [
+                { name: 'Desktop Grid', width: 1920, height: 300, columns: grids.desktop.columns, margin: grids.desktop.margin, gutter: grids.desktop.gutter },
+                { name: 'Tablet Grid', width: 800, height: 300, columns: grids.tablet.columns, margin: grids.tablet.margin, gutter: grids.tablet.gutter },
+                { name: 'Mobile Grid', width: 342, height: 300, columns: grids.mobile.columns, margin: grids.mobile.margin, gutter: grids.mobile.gutter }
+            ];
+
+            // Generate grid cards
+            for (const config of gridConfigs) {
+                const gridCard = figma.createFrame();
+                gridCard.name = config.name;
+                gridCard.layoutMode = "VERTICAL";
+                gridCard.primaryAxisSizingMode = "AUTO";
+                gridCard.counterAxisSizingMode = "AUTO";
+                gridCard.itemSpacing = 12;
+                gridCard.fills = [];
+
+                // Grid title
+                const gridTitle = figma.createText();
+                gridTitle.characters = config.name;
+                gridTitle.fontSize = 18;
+                gridTitle.fontName = { family: "Inter", style: "Bold" };
+                gridTitle.fills = [{ type: 'SOLID', color: hexToRgb('#2D3339') }];
+
+                gridCard.appendChild(gridTitle);
+
+                // Grid preview container
+                const gridPreviewContainer = figma.createFrame();
+                gridPreviewContainer.name = "Grid Preview Container";
+                gridPreviewContainer.layoutMode = "VERTICAL";
+                gridPreviewContainer.primaryAxisSizingMode = "AUTO";
+                gridPreviewContainer.counterAxisSizingMode = "AUTO";
+                gridPreviewContainer.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+                gridPreviewContainer.strokes = [{ type: 'SOLID', color: hexToRgb('#D5D5D6') }];
+                gridPreviewContainer.strokeWeight = 1;
+                gridPreviewContainer.cornerRadius = 8;
+                gridPreviewContainer.clipsContent = false;
+
+                // Grid preview frame (scaled down to fit)
+                const scale = Math.min(1200 / config.width, 1);
+                const scaledWidth = config.width * scale;
+                const scaledHeight = config.height * scale;
+
+                const gridPreview = figma.createFrame();
+                gridPreview.name = "Grid Preview";
+                gridPreview.resize(scaledWidth, scaledHeight);
+                gridPreview.fills = [{ type: 'SOLID', color: hexToRgb('#F5F5F5') }];
+
+                // Calculate column width
+                const totalMargin = config.margin * 2;
+                const totalGutters = (config.columns - 1) * config.gutter;
+                const availableWidth = config.width - totalMargin - totalGutters;
+                const columnWidth = availableWidth / config.columns;
+
+                // Create columns
+                for (let i = 0; i < config.columns; i++) {
+                    const column = figma.createFrame();
+                    column.name = `Column ${i + 1}`;
+                    const xPos = config.margin + (i * (columnWidth + config.gutter));
+                    column.x = xPos * scale;
+                    column.y = 0;
+                    column.resize(columnWidth * scale, scaledHeight);
+                    column.fills = [{ type: 'SOLID', color: hexToRgb('#1350FF'), opacity: 0.1 }];
+                    column.strokes = [{ type: 'SOLID', color: hexToRgb('#1350FF') }];
+                    column.strokeWeight = 1;
+                    column.dashPattern = [4, 4];
+
+                    gridPreview.appendChild(column);
+                }
+
+                gridPreviewContainer.appendChild(gridPreview);
+                gridCard.appendChild(gridPreviewContainer);
+
+                // Grid info
+                const gridInfo = figma.createFrame();
+                gridInfo.name = "Grid Info";
+                gridInfo.layoutMode = "HORIZONTAL";
+                gridInfo.primaryAxisSizingMode = "AUTO";
+                gridInfo.counterAxisSizingMode = "AUTO";
+                gridInfo.itemSpacing = 24;
+                gridInfo.fills = [];
+
+                const infoItems = [
+                    { label: 'Columns', value: `${config.columns}` },
+                    { label: 'Margin', value: `${config.margin}px` },
+                    { label: 'Gutter', value: `${config.gutter}px` },
+                    { label: 'Width', value: `${config.width}px` }
+                ];
+
+                for (const item of infoItems) {
+                    const infoItem = figma.createFrame();
+                    infoItem.name = item.label;
+                    infoItem.layoutMode = "VERTICAL";
+                    infoItem.primaryAxisSizingMode = "AUTO";
+                    infoItem.counterAxisSizingMode = "AUTO";
+                    infoItem.itemSpacing = 4;
+                    infoItem.fills = [];
+
+                    const label = figma.createText();
+                    label.characters = item.label;
+                    label.fontSize = 10;
+                    label.fontName = { family: "Inter", style: "Regular" };
+                    label.fills = [{ type: 'SOLID', color: hexToRgb('#7F7F7F') }];
+
+                    const value = figma.createText();
+                    value.characters = item.value;
+                    value.fontSize = 12;
+                    value.fontName = { family: "Inter", style: "Medium" };
+                    value.fills = [{ type: 'SOLID', color: hexToRgb('#2D3339') }];
+
+                    infoItem.appendChild(label);
+                    infoItem.appendChild(value);
+                    gridInfo.appendChild(infoItem);
+                }
+
+                gridCard.appendChild(gridInfo);
+                tokenGrid.appendChild(gridCard);
+            }
+
+            frame.appendChild(tokenGrid);
+
+            // Add footer
+            const footer = figma.createFrame();
+            footer.name = "Footer Section";
+            footer.layoutMode = "VERTICAL";
+            footer.primaryAxisSizingMode = "AUTO";
+            footer.counterAxisSizingMode = "AUTO";
+            footer.primaryAxisAlignItems = "MIN";
+            footer.itemSpacing = 8;
+            footer.fills = [];
+
+            const createdBy = figma.createText();
+            createdBy.characters = "Created By";
+            createdBy.fontSize = 12;
+            createdBy.fontName = { family: "Inter", style: "Regular" };
+            createdBy.fills = [{ type: 'SOLID', color: hexToRgb('#8A8A8A') }];
+            createdBy.textAlignHorizontal = "CENTER";
+
+            const website = figma.createText();
+            website.characters = "Slate.Design.com";
+            website.fontSize = 16;
+            website.fontName = { family: "Inter", style: "Bold" };
+            website.fills = [{ type: 'SOLID', color: hexToRgb('#121212') }];
+            website.textAlignHorizontal = "CENTER";
+
+            footer.appendChild(createdBy);
+            footer.appendChild(website);
+            frame.appendChild(footer);
+
+            // Select and zoom to the created frame
+            figma.currentPage.selection = [frame];
+            figma.viewport.scrollAndZoomIntoView([frame]);
+
+            figma.notify('Grid Token Documentation created successfully!');
+        } catch (error) {
+            figma.notify('Error creating grid doc: ' + error.message);
+            console.error(error);
+        }
+    }
+
     if (msg.type === "create-typography-styles") {
         try {
             const baseFontSize = msg.baseFontSize;

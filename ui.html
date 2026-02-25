@@ -4442,6 +4442,18 @@
                         }
                     }
                 }, '*');
+
+                // Also create the grid documentation
+                parent.postMessage({
+                    pluginMessage: {
+                        type: 'create-grid-doc',
+                        grids: {
+                            desktop: { columns: desktopColumns, margin: desktopMargin, gutter: desktopGutter },
+                            tablet: { columns: tabletColumns, margin: tabletMargin, gutter: tabletGutter },
+                            mobile: { columns: mobileColumns, margin: mobileMargin, gutter: mobileGutter }
+                        }
+                    }
+                }, '*');
             }
         }
 
