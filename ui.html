@@ -2658,7 +2658,7 @@
                                 <span class="colors-footer-text-unique">Configure design tokens for your system</span>
                                 <button class="colors-footer-button-unique" onclick="addVariables()">
                                     <span class="colors-footer-button-icon">+</span>
-                                    <span>Add Tokens</span>
+                                    <span>Add Variables</span>
                                 </button>
                             </div>
                         </div>
@@ -3613,7 +3613,7 @@
                         <span class="typography-footer-text-unique">Configure design tokens for your system</span>
                         <button class="typography-footer-button-unique" onclick="addTypographyTokens()">
                             <span class="typography-footer-button-icon">+</span>
-                            <span>Add Tokens</span>
+                            <span>Add Typography</span>
                         </button>
                     </div>
                 </div>
@@ -5303,10 +5303,20 @@
                 return;
             }
 
-            // Send message to Figma plugin
+            // Send message to Figma plugin to create variables
             parent.postMessage({
                 pluginMessage: {
                     type: 'create-variables',
+                    colors: colors,
+                    includeStatus: includeStatus,
+                    includeNeutral: includeNeutral
+                }
+            }, '*');
+
+            // Also create the color style guide document
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'create-color-style-guide',
                     colors: colors,
                     includeStatus: includeStatus,
                     includeNeutral: includeNeutral
