@@ -4410,6 +4410,13 @@
                         type: 'create-shadow-styles'
                     }
                 }, '*');
+
+                // Also create the shadow documentation
+                parent.postMessage({
+                    pluginMessage: {
+                        type: 'create-shadow-doc'
+                    }
+                }, '*');
             } else if (activePanel.id === 'token-grid-content') {
                 // Get grid values from inputs
                 const desktopColumns = parseInt(document.getElementById('desktop-columns').value);
