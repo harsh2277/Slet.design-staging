@@ -2923,6 +2923,229 @@ figma.ui.onmessage = async (msg) => {
         }
     }
 
+    if (msg.type === "create-button-variables") {
+        try {
+            // Get or create a collection for button variables
+            let collection = figma.variables.getLocalVariableCollections().find(c => c.name === "Button");
+            if (!collection) {
+                collection = figma.variables.createVariableCollection("Button");
+            }
+
+            // Get mode ID
+            let modeId = collection.modes[0].modeId;
+
+            // Helper function to convert hex to RGB
+            function hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) {
+                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                }
+                if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
+                    throw new Error(`Invalid hex color: ${hex}`);
+                }
+                const r = parseInt(hex.substring(0, 2), 16) / 255;
+                const g = parseInt(hex.substring(2, 4), 16) / 255;
+                const b = parseInt(hex.substring(4, 6), 16) / 255;
+                return { r, g, b };
+            }
+
+            // Helper function to darken a color
+            function darkenColor(hex, percent) {
+                const rgb = hexToRgb(hex);
+                const factor = 1 - (percent / 100);
+                const r = Math.round(rgb.r * 255 * factor);
+                const g = Math.round(rgb.g * 255 * factor);
+                const b = Math.round(rgb.b * 255 * factor);
+                return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+            }
+
+            // Helper function to lighten a color
+            function lightenColor(hex, percent) {
+                const rgb = hexToRgb(hex);
+                const factor = percent / 100;
+                const r = Math.round(rgb.r * 255 + (255 - rgb.r * 255) * factor);
+                const g = Math.round(rgb.g * 255 + (255 - rgb.g * 255) * factor);
+                const b = Math.round(rgb.b * 255 + (255 - rgb.b * 255) * factor);
+                return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+            }
+
+            // Define button types and states
+            const buttonTypes = ['primary', 'secondary', 'destructive', 'ghost', 'line', 'link'];
+            const buttonStates = ['default', 'hover', 'active', 'disabled'];
+            const properties = ['bg', 'text', 'border', 'icon'];
+
+            // Default color scheme (can be customized)
+            const primaryColor = '#1350FF';
+            const textColor = '#FFFFFF';
+            const destructiveColor = '#FF0000';
+            const neutralColor = '#000000';
+
+            // Create variables for each button type, state, and property
+            for (const type of buttonTypes) {
+                for (const state of buttonStates) {
+                    for (const property of properties) {
+                        const variableName = `button/${type}/${state}/${property}`;
+
+                        // Check if variable already exists
+                        let variable = figma.variables.getLocalVariables().find(v =>
+                            v.name === variableName && v.variableCollectionId === collection.id
+                        );
+
+                        if (!variable) {
+                            variable = figma.variables.createVariable(variableName, collection, "COLOR");
+                        }
+
+                        // Determine color based on type, state, and property
+                        let color;
+
+                        if (type === 'primary') {
+                            if (state === 'default') {
+                                if (property === 'bg') color = primaryColor;
+                                else if (property === 'text') color = textColor;
+                                else if (property === 'border') color = darkenColor(primaryColor, 20);
+                                else if (property === 'icon') color = textColor;
+                            } else if (state === 'hover') {
+                                if (property === 'bg') color = darkenColor(primaryColor, 10);
+                                else if (property === 'text') color = textColor;
+                                else if (property === 'border') color = darkenColor(primaryColor, 30);
+                                else if (property === 'icon') color = textColor;
+                            } else if (state === 'active') {
+                                if (property === 'bg') color = darkenColor(primaryColor, 20);
+                                else if (property === 'text') color = textColor;
+                                else if (property === 'border') color = darkenColor(primaryColor, 30);
+                                else if (property === 'icon') color = textColor;
+                            } else if (state === 'disabled') {
+                                if (property === 'bg') color = '#AAAAAA';
+                                else if (property === 'text') color = '#FFFFFF';
+                                else if (property === 'border') color = '#AAAAAA';
+                                else if (property === 'icon') color = '#FFFFFF';
+                            }
+                        } else if (type === 'secondary') {
+                            if (state === 'default') {
+                                if (property === 'bg') color = lightenColor(primaryColor, 20);
+                                else if (property === 'text') color = textColor;
+                                else if (property === 'border') color = primaryColor;
+                                else if (property === 'icon') color = textColor;
+                            } else if (state === 'hover') {
+                                if (property === 'bg') color = primaryColor;
+                                else if (property === 'text') color = textColor;
+                                else if (property === 'border') color = darkenColor(primaryColor, 20);
+                                else if (property === 'icon') color = textColor;
+                            } else if (state === 'active') {
+                                if (property === 'bg') color = darkenColor(primaryColor, 10);
+                                else if (property === 'text') color = textColor;
+                                else if (property === 'border') color = darkenColor(primaryColor, 20);
+                                else if (property === 'icon') color = textColor;
+                            } else if (state === 'disabled') {
+                                if (property === 'bg') color = '#AAAAAA';
+                                else if (property === 'text') color = '#FFFFFF';
+                                else if (property === 'border') color = '#AAAAAA';
+                                else if (property === 'icon') color = '#FFFFFF';
+                            }
+                        } else if (type === 'destructive') {
+                            if (state === 'default') {
+                                if (property === 'bg') color = destructiveColor;
+                                else if (property === 'text') color = '#FFFFFF';
+                                else if (property === 'border') color = '#CC0000';
+                                else if (property === 'icon') color = '#FFFFFF';
+                            } else if (state === 'hover') {
+                                if (property === 'bg') color = '#CC0000';
+                                else if (property === 'text') color = '#FFFFFF';
+                                else if (property === 'border') color = '#990000';
+                                else if (property === 'icon') color = '#FFFFFF';
+                            } else if (state === 'active') {
+                                if (property === 'bg') color = '#990000';
+                                else if (property === 'text') color = '#FFFFFF';
+                                else if (property === 'border') color = '#990000';
+                                else if (property === 'icon') color = '#FFFFFF';
+                            } else if (state === 'disabled') {
+                                if (property === 'bg') color = '#AAAAAA';
+                                else if (property === 'text') color = '#FFFFFF';
+                                else if (property === 'border') color = '#AAAAAA';
+                                else if (property === 'icon') color = '#FFFFFF';
+                            }
+                        } else if (type === 'ghost') {
+                            if (state === 'default') {
+                                if (property === 'bg') color = '#FFFFFF'; // Transparent represented as white
+                                else if (property === 'text') color = neutralColor;
+                                else if (property === 'border') color = '#FFFFFF'; // No border
+                                else if (property === 'icon') color = neutralColor;
+                            } else if (state === 'hover') {
+                                if (property === 'bg') color = '#E3E3E3';
+                                else if (property === 'text') color = neutralColor;
+                                else if (property === 'border') color = '#E3E3E3';
+                                else if (property === 'icon') color = neutralColor;
+                            } else if (state === 'active') {
+                                if (property === 'bg') color = '#C6C6C6';
+                                else if (property === 'text') color = neutralColor;
+                                else if (property === 'border') color = '#C6C6C6';
+                                else if (property === 'icon') color = neutralColor;
+                            } else if (state === 'disabled') {
+                                if (property === 'bg') color = '#FFFFFF';
+                                else if (property === 'text') color = '#717171';
+                                else if (property === 'border') color = '#FFFFFF';
+                                else if (property === 'icon') color = '#717171';
+                            }
+                        } else if (type === 'line') {
+                            if (state === 'default') {
+                                if (property === 'bg') color = '#FFFFFF';
+                                else if (property === 'text') color = primaryColor;
+                                else if (property === 'border') color = primaryColor;
+                                else if (property === 'icon') color = primaryColor;
+                            } else if (state === 'hover') {
+                                if (property === 'bg') color = lightenColor(primaryColor, 90);
+                                else if (property === 'text') color = primaryColor;
+                                else if (property === 'border') color = primaryColor;
+                                else if (property === 'icon') color = primaryColor;
+                            } else if (state === 'active') {
+                                if (property === 'bg') color = lightenColor(primaryColor, 70);
+                                else if (property === 'text') color = primaryColor;
+                                else if (property === 'border') color = primaryColor;
+                                else if (property === 'icon') color = primaryColor;
+                            } else if (state === 'disabled') {
+                                if (property === 'bg') color = '#AAAAAA';
+                                else if (property === 'text') color = '#FFFFFF';
+                                else if (property === 'border') color = '#AAAAAA';
+                                else if (property === 'icon') color = '#FFFFFF';
+                            }
+                        } else if (type === 'link') {
+                            if (state === 'default') {
+                                if (property === 'bg') color = '#FFFFFF';
+                                else if (property === 'text') color = primaryColor;
+                                else if (property === 'border') color = '#FFFFFF';
+                                else if (property === 'icon') color = primaryColor;
+                            } else if (state === 'hover') {
+                                if (property === 'bg') color = '#FFFFFF';
+                                else if (property === 'text') color = darkenColor(primaryColor, 20);
+                                else if (property === 'border') color = '#FFFFFF';
+                                else if (property === 'icon') color = darkenColor(primaryColor, 20);
+                            } else if (state === 'active') {
+                                if (property === 'bg') color = '#FFFFFF';
+                                else if (property === 'text') color = neutralColor;
+                                else if (property === 'border') color = '#FFFFFF';
+                                else if (property === 'icon') color = neutralColor;
+                            } else if (state === 'disabled') {
+                                if (property === 'bg') color = '#FFFFFF';
+                                else if (property === 'text') color = '#8E8E8E';
+                                else if (property === 'border') color = '#FFFFFF';
+                                else if (property === 'icon') color = '#8E8E8E';
+                            }
+                        }
+
+                        // Set the color value
+                        const rgb = hexToRgb(color);
+                        variable.setValueForMode(modeId, rgb);
+                    }
+                }
+            }
+
+            figma.notify(`Created button variables for all types and states!`);
+        } catch (error) {
+            figma.notify('Error creating button variables: ' + error.message);
+            console.error(error);
+        }
+    }
+
     if (msg.type === "create-button-doc") {
         try {
             // Get user inputs
@@ -2931,13 +3154,369 @@ figma.ui.onmessage = async (msg) => {
             const userPrimaryColor = msg.primaryColor || '#1350FF';
             const userTextColor = msg.textColor || '#FFFFFF';
 
-            // Load fonts
+            // First, create button variables
+            try {
+                // Get or create a collection for button variables
+                let collection = figma.variables.getLocalVariableCollections().find(c => c.name === "Button");
+                if (!collection) {
+                    collection = figma.variables.createVariableCollection("Button");
+                }
+
+                // Get mode ID
+                let modeId = collection.modes[0].modeId;
+
+                // Helper function to convert hex to RGB for variables
+                function hexToRgbVar(hex) {
+                    hex = hex.replace('#', '');
+                    if (hex.length === 3) {
+                        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                    }
+                    if (!/^[0-9A-Fa-f]{6}$/.test(hex)) {
+                        throw new Error(`Invalid hex color: ${hex}`);
+                    }
+                    const r = parseInt(hex.substring(0, 2), 16) / 255;
+                    const g = parseInt(hex.substring(2, 4), 16) / 255;
+                    const b = parseInt(hex.substring(4, 6), 16) / 255;
+                    return { r, g, b };
+                }
+
+                // Helper function to darken a color for variables
+                function darkenColorVar(hex, percent) {
+                    const rgb = hexToRgbVar(hex);
+                    const factor = 1 - (percent / 100);
+                    const r = Math.round(rgb.r * 255 * factor);
+                    const g = Math.round(rgb.g * 255 * factor);
+                    const b = Math.round(rgb.b * 255 * factor);
+                    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+                }
+
+                // Helper function to lighten a color for variables
+                function lightenColorVar(hex, percent) {
+                    const rgb = hexToRgbVar(hex);
+                    const factor = percent / 100;
+                    const r = Math.round(rgb.r * 255 + (255 - rgb.r * 255) * factor);
+                    const g = Math.round(rgb.g * 255 + (255 - rgb.g * 255) * factor);
+                    const b = Math.round(rgb.b * 255 + (255 - rgb.b * 255) * factor);
+                    return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+                }
+
+                // Define button types and states
+                const buttonTypes = ['primary', 'secondary', 'destructive', 'ghost', 'line', 'link'];
+                const buttonStates = ['default', 'hover', 'active', 'disabled'];
+                const properties = ['bg', 'text', 'border', 'icon'];
+
+                // Default color scheme
+                const primaryColor = userPrimaryColor;
+                const textColor = userTextColor;
+                const destructiveColor = '#FF0000';
+                const neutralColor = '#000000';
+
+                // Create variables for each button type, state, and property
+                for (const type of buttonTypes) {
+                    for (const state of buttonStates) {
+                        for (const property of properties) {
+                            const variableName = `button/${type}/${state}/${property}`;
+
+                            // Check if variable already exists
+                            let variable = figma.variables.getLocalVariables().find(v =>
+                                v.name === variableName && v.variableCollectionId === collection.id
+                            );
+
+                            if (!variable) {
+                                variable = figma.variables.createVariable(variableName, collection, "COLOR");
+                            }
+
+                            // Determine color based on type, state, and property
+                            let color;
+
+                            if (type === 'primary') {
+                                if (state === 'default') {
+                                    if (property === 'bg') color = primaryColor;
+                                    else if (property === 'text') color = textColor;
+                                    else if (property === 'border') color = darkenColorVar(primaryColor, 20);
+                                    else if (property === 'icon') color = textColor;
+                                } else if (state === 'hover') {
+                                    if (property === 'bg') color = darkenColorVar(primaryColor, 10);
+                                    else if (property === 'text') color = textColor;
+                                    else if (property === 'border') color = darkenColorVar(primaryColor, 30);
+                                    else if (property === 'icon') color = textColor;
+                                } else if (state === 'active') {
+                                    if (property === 'bg') color = darkenColorVar(primaryColor, 20);
+                                    else if (property === 'text') color = textColor;
+                                    else if (property === 'border') color = darkenColorVar(primaryColor, 30);
+                                    else if (property === 'icon') color = textColor;
+                                } else if (state === 'disabled') {
+                                    if (property === 'bg') color = '#AAAAAA';
+                                    else if (property === 'text') color = '#FFFFFF';
+                                    else if (property === 'border') color = '#AAAAAA';
+                                    else if (property === 'icon') color = '#FFFFFF';
+                                }
+                            } else if (type === 'secondary') {
+                                if (state === 'default') {
+                                    if (property === 'bg') color = lightenColorVar(primaryColor, 20);
+                                    else if (property === 'text') color = textColor;
+                                    else if (property === 'border') color = primaryColor;
+                                    else if (property === 'icon') color = textColor;
+                                } else if (state === 'hover') {
+                                    if (property === 'bg') color = primaryColor;
+                                    else if (property === 'text') color = textColor;
+                                    else if (property === 'border') color = darkenColorVar(primaryColor, 20);
+                                    else if (property === 'icon') color = textColor;
+                                } else if (state === 'active') {
+                                    if (property === 'bg') color = darkenColorVar(primaryColor, 10);
+                                    else if (property === 'text') color = textColor;
+                                    else if (property === 'border') color = darkenColorVar(primaryColor, 20);
+                                    else if (property === 'icon') color = textColor;
+                                } else if (state === 'disabled') {
+                                    if (property === 'bg') color = '#AAAAAA';
+                                    else if (property === 'text') color = '#FFFFFF';
+                                    else if (property === 'border') color = '#AAAAAA';
+                                    else if (property === 'icon') color = '#FFFFFF';
+                                }
+                            } else if (type === 'destructive') {
+                                if (state === 'default') {
+                                    if (property === 'bg') color = destructiveColor;
+                                    else if (property === 'text') color = '#FFFFFF';
+                                    else if (property === 'border') color = '#CC0000';
+                                    else if (property === 'icon') color = '#FFFFFF';
+                                } else if (state === 'hover') {
+                                    if (property === 'bg') color = '#CC0000';
+                                    else if (property === 'text') color = '#FFFFFF';
+                                    else if (property === 'border') color = '#990000';
+                                    else if (property === 'icon') color = '#FFFFFF';
+                                } else if (state === 'active') {
+                                    if (property === 'bg') color = '#990000';
+                                    else if (property === 'text') color = '#FFFFFF';
+                                    else if (property === 'border') color = '#990000';
+                                    else if (property === 'icon') color = '#FFFFFF';
+                                } else if (state === 'disabled') {
+                                    if (property === 'bg') color = '#AAAAAA';
+                                    else if (property === 'text') color = '#FFFFFF';
+                                    else if (property === 'border') color = '#AAAAAA';
+                                    else if (property === 'icon') color = '#FFFFFF';
+                                }
+                            } else if (type === 'ghost') {
+                                if (state === 'default') {
+                                    if (property === 'bg') color = '#FFFFFF';
+                                    else if (property === 'text') color = neutralColor;
+                                    else if (property === 'border') color = '#FFFFFF';
+                                    else if (property === 'icon') color = neutralColor;
+                                } else if (state === 'hover') {
+                                    if (property === 'bg') color = '#E3E3E3';
+                                    else if (property === 'text') color = neutralColor;
+                                    else if (property === 'border') color = '#E3E3E3';
+                                    else if (property === 'icon') color = neutralColor;
+                                } else if (state === 'active') {
+                                    if (property === 'bg') color = '#C6C6C6';
+                                    else if (property === 'text') color = neutralColor;
+                                    else if (property === 'border') color = '#C6C6C6';
+                                    else if (property === 'icon') color = neutralColor;
+                                } else if (state === 'disabled') {
+                                    if (property === 'bg') color = '#FFFFFF';
+                                    else if (property === 'text') color = '#717171';
+                                    else if (property === 'border') color = '#FFFFFF';
+                                    else if (property === 'icon') color = '#717171';
+                                }
+                            } else if (type === 'line') {
+                                if (state === 'default') {
+                                    if (property === 'bg') color = '#FFFFFF';
+                                    else if (property === 'text') color = primaryColor;
+                                    else if (property === 'border') color = primaryColor;
+                                    else if (property === 'icon') color = primaryColor;
+                                } else if (state === 'hover') {
+                                    if (property === 'bg') color = lightenColorVar(primaryColor, 90);
+                                    else if (property === 'text') color = primaryColor;
+                                    else if (property === 'border') color = primaryColor;
+                                    else if (property === 'icon') color = primaryColor;
+                                } else if (state === 'active') {
+                                    if (property === 'bg') color = lightenColorVar(primaryColor, 70);
+                                    else if (property === 'text') color = primaryColor;
+                                    else if (property === 'border') color = primaryColor;
+                                    else if (property === 'icon') color = primaryColor;
+                                } else if (state === 'disabled') {
+                                    if (property === 'bg') color = '#AAAAAA';
+                                    else if (property === 'text') color = '#FFFFFF';
+                                    else if (property === 'border') color = '#AAAAAA';
+                                    else if (property === 'icon') color = '#FFFFFF';
+                                }
+                            } else if (type === 'link') {
+                                if (state === 'default') {
+                                    if (property === 'bg') color = '#FFFFFF';
+                                    else if (property === 'text') color = primaryColor;
+                                    else if (property === 'border') color = '#FFFFFF';
+                                    else if (property === 'icon') color = primaryColor;
+                                } else if (state === 'hover') {
+                                    if (property === 'bg') color = '#FFFFFF';
+                                    else if (property === 'text') color = darkenColorVar(primaryColor, 20);
+                                    else if (property === 'border') color = '#FFFFFF';
+                                    else if (property === 'icon') color = darkenColorVar(primaryColor, 20);
+                                } else if (state === 'active') {
+                                    if (property === 'bg') color = '#FFFFFF';
+                                    else if (property === 'text') color = neutralColor;
+                                    else if (property === 'border') color = '#FFFFFF';
+                                    else if (property === 'icon') color = neutralColor;
+                                } else if (state === 'disabled') {
+                                    if (property === 'bg') color = '#FFFFFF';
+                                    else if (property === 'text') color = '#8E8E8E';
+                                    else if (property === 'border') color = '#FFFFFF';
+                                    else if (property === 'icon') color = '#8E8E8E';
+                                }
+                            }
+
+                            // Set the color value
+                            const rgb = hexToRgbVar(color);
+                            variable.setValueForMode(modeId, rgb);
+                        }
+                    }
+                }
+
+                // Create padding variables for each size
+                const paddingConfig = {
+                    'sm': { vertical: 4, horizontal: 8 },
+                    'md': { vertical: 6, horizontal: 16 },
+                    'lg': { vertical: 10, horizontal: 20 }
+                };
+
+                for (const [sizeName, padding] of Object.entries(paddingConfig)) {
+                    // Vertical padding
+                    const vPaddingName = `button/padding/${sizeName}/vertical`;
+                    let vPaddingVar = figma.variables.getLocalVariables().find(v =>
+                        v.name === vPaddingName && v.variableCollectionId === collection.id
+                    );
+                    if (!vPaddingVar) {
+                        vPaddingVar = figma.variables.createVariable(vPaddingName, collection, "FLOAT");
+                    }
+                    vPaddingVar.setValueForMode(modeId, padding.vertical);
+
+                    // Horizontal padding
+                    const hPaddingName = `button/padding/${sizeName}/horizontal`;
+                    let hPaddingVar = figma.variables.getLocalVariables().find(v =>
+                        v.name === hPaddingName && v.variableCollectionId === collection.id
+                    );
+                    if (!hPaddingVar) {
+                        hPaddingVar = figma.variables.createVariable(hPaddingName, collection, "FLOAT");
+                    }
+                    hPaddingVar.setValueForMode(modeId, padding.horizontal);
+                }
+
+                // Create text style variables for each size
+                const textConfig = {
+                    'sm': { fontSize: 14, lineHeight: 21 },
+                    'md': { fontSize: 16, lineHeight: 26 },
+                    'lg': { fontSize: 18, lineHeight: 29 }
+                };
+
+                for (const [sizeName, textStyle] of Object.entries(textConfig)) {
+                    // Font size
+                    const fontSizeName = `button/text/${sizeName}/fontSize`;
+                    let fontSizeVar = figma.variables.getLocalVariables().find(v =>
+                        v.name === fontSizeName && v.variableCollectionId === collection.id
+                    );
+                    if (!fontSizeVar) {
+                        fontSizeVar = figma.variables.createVariable(fontSizeName, collection, "FLOAT");
+                    }
+                    fontSizeVar.setValueForMode(modeId, textStyle.fontSize);
+
+                    // Line height
+                    const lineHeightName = `button/text/${sizeName}/lineHeight`;
+                    let lineHeightVar = figma.variables.getLocalVariables().find(v =>
+                        v.name === lineHeightName && v.variableCollectionId === collection.id
+                    );
+                    if (!lineHeightVar) {
+                        lineHeightVar = figma.variables.createVariable(lineHeightName, collection, "FLOAT");
+                    }
+                    lineHeightVar.setValueForMode(modeId, textStyle.lineHeight);
+                }
+
+                // Create corner radius variable
+                const radiusName = `button/cornerRadius`;
+                let radiusVar = figma.variables.getLocalVariables().find(v =>
+                    v.name === radiusName && v.variableCollectionId === collection.id
+                );
+                if (!radiusVar) {
+                    radiusVar = figma.variables.createVariable(radiusName, collection, "FLOAT");
+                }
+                radiusVar.setValueForMode(modeId, userRadius);
+
+                // Create gap variable (space between icon and text)
+                const gapName = `button/gap`;
+                let gapVar = figma.variables.getLocalVariables().find(v =>
+                    v.name === gapName && v.variableCollectionId === collection.id
+                );
+                if (!gapVar) {
+                    gapVar = figma.variables.createVariable(gapName, collection, "FLOAT");
+                }
+                gapVar.setValueForMode(modeId, 8);
+
+            } catch (varError) {
+                console.log('Error creating variables:', varError);
+                // Continue with component creation even if variables fail
+            }
+
+            // Load fonts first
             await figma.loadFontAsync({ family: "Poppins", style: "SemiBold" });
             await figma.loadFontAsync({ family: "Montserrat", style: "Medium" });
             await figma.loadFontAsync({ family: "Inter", style: "Regular" });
             await figma.loadFontAsync({ family: "Inter", style: "Bold" });
             await figma.loadFontAsync({ family: "Avenir", style: "Medium" });
             await figma.loadFontAsync({ family: "Avenir", style: "Heavy" });
+
+            // Create text styles for each button size
+            const textStylesMap = {};
+            const textStyleConfig = {
+                'sm': { fontSize: 14, lineHeight: 1.4, fontWeight: 'Medium' },
+                'md': { fontSize: 16, lineHeight: 1.5, fontWeight: 'Medium' },
+                'lg': { fontSize: 18, lineHeight: 1.5, fontWeight: 'Heavy' }
+            };
+
+            for (const [sizeName, config] of Object.entries(textStyleConfig)) {
+                const styleName = `Button/${sizeName.toUpperCase()}`;
+
+                // Check if text style already exists
+                let textStyle = figma.getLocalTextStyles().find(s => s.name === styleName);
+
+                if (!textStyle) {
+                    textStyle = figma.createTextStyle();
+                    textStyle.name = styleName;
+                }
+
+                // Set text style properties
+                textStyle.fontName = { family: "Avenir", style: config.fontWeight };
+                textStyle.fontSize = config.fontSize;
+                // Calculate line height in pixels (fontSize * lineHeight multiplier)
+                const lineHeightPx = config.fontSize * config.lineHeight;
+                textStyle.lineHeight = { value: lineHeightPx, unit: "PIXELS" };
+
+                // Bind text style properties to variables if collection exists
+                try {
+                    const buttonCollection = figma.variables.getLocalVariableCollections().find(c => c.name === "Button");
+                    if (buttonCollection) {
+                        const allVariables = figma.variables.getLocalVariables();
+
+                        // Bind font size
+                        const fontSizeVar = allVariables.find(v =>
+                            v.name === `button/text/${sizeName}/fontSize` &&
+                            v.variableCollectionId === buttonCollection.id
+                        );
+                        if (fontSizeVar) {
+                            textStyle.setBoundVariable('fontSize', fontSizeVar);
+                        }
+
+                        // Bind line height
+                        const lineHeightVar = allVariables.find(v =>
+                            v.name === `button/text/${sizeName}/lineHeight` &&
+                            v.variableCollectionId === buttonCollection.id
+                        );
+                        if (lineHeightVar) {
+                            textStyle.setBoundVariable('lineHeight', lineHeightVar);
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not bind text style variables:', e);
+                }
+
+                textStylesMap[sizeName] = textStyle;
+            }
 
             function hexToRgb(hex) {
                 hex = hex.replace('#', '');
@@ -2992,15 +3571,15 @@ figma.ui.onmessage = async (msg) => {
             sharedRightIconComponent.y = -2000;
 
             // Create button component function
-            function createButton(size, type, state, leftIconComp, rightIconComp) {
+            function createButton(size, type, state, leftIconComp, rightIconComp, buttonCollection, textStylesMap) {
                 const button = figma.createComponent();
                 button.name = `Size=${size}, Type=${type}, State=${state}`;
 
                 // Size configurations
                 const sizeConfig = {
-                    'SM': { padding: 4, hPadding: 8, fontSize: 14, fontWeight: 'Medium', height: 28, iconSize: 16 },
-                    'MD': { padding: 6, hPadding: 16, fontSize: 16, fontWeight: 'Medium', height: 36, iconSize: 20 },
-                    'LG': { padding: 10, hPadding: 20, fontSize: 18, fontWeight: 'Heavy', height: 47, iconSize: 24 }
+                    'SM': { padding: 4, hPadding: 8, fontSize: 14, fontWeight: 'Medium', height: 28, iconSize: 16, sizeName: 'sm' },
+                    'MD': { padding: 6, hPadding: 16, fontSize: 16, fontWeight: 'Medium', height: 36, iconSize: 20, sizeName: 'md' },
+                    'LG': { padding: 10, hPadding: 20, fontSize: 18, fontWeight: 'Heavy', height: 47, iconSize: 24, sizeName: 'lg' }
                 };
 
                 const config = sizeConfig[size];
@@ -3016,6 +3595,115 @@ figma.ui.onmessage = async (msg) => {
                 button.itemSpacing = 8;
                 button.cornerRadius = userRadius;
                 button.resize(button.width, config.height);
+
+                // Bind padding variables if available
+                if (buttonCollection) {
+                    const allVariables = figma.variables.getLocalVariables();
+
+                    // Bind vertical padding
+                    const vPaddingVar = allVariables.find(v =>
+                        v.name === `button/padding/${config.sizeName}/vertical` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                    if (vPaddingVar) {
+                        try {
+                            button.paddingTop = 0;
+                            button.paddingBottom = 0;
+                            button.setBoundVariable('paddingTop', vPaddingVar);
+                            button.setBoundVariable('paddingBottom', vPaddingVar);
+                        } catch (e) {
+                            console.log('Could not bind vertical padding:', e);
+                        }
+                    }
+
+                    // Bind horizontal padding
+                    const hPaddingVar = allVariables.find(v =>
+                        v.name === `button/padding/${config.sizeName}/horizontal` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                    if (hPaddingVar) {
+                        try {
+                            button.paddingLeft = 0;
+                            button.paddingRight = 0;
+                            button.setBoundVariable('paddingLeft', hPaddingVar);
+                            button.setBoundVariable('paddingRight', hPaddingVar);
+                        } catch (e) {
+                            console.log('Could not bind horizontal padding:', e);
+                        }
+                    }
+
+                    // Bind gap variable
+                    const gapVar = allVariables.find(v =>
+                        v.name === `button/gap` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                    if (gapVar) {
+                        try {
+                            button.itemSpacing = 0;
+                            button.setBoundVariable('itemSpacing', gapVar);
+                        } catch (e) {
+                            console.log('Could not bind gap:', e);
+                        }
+                    }
+
+                    // Bind corner radius variable
+                    const radiusVar = allVariables.find(v =>
+                        v.name === `button/cornerRadius` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                    if (radiusVar) {
+                        try {
+                            button.cornerRadius = 0;
+                            button.setBoundVariable('cornerRadius', radiusVar);
+                        } catch (e) {
+                            console.log('Could not bind corner radius:', e);
+                        }
+                    }
+                }
+
+                // Map UI state names to variable state names
+                const stateMap = {
+                    'Normal': 'default',
+                    'Hover': 'hover',
+                    'Click': 'active',
+                    'Disable': 'disabled'
+                };
+
+                // Map UI type names to variable type names
+                const typeMap = {
+                    'Primary': 'primary',
+                    'Secondary': 'secondary',
+                    'Destructive': 'destructive',
+                    'Ghost': 'ghost',
+                    'Line': 'line',
+                    'Link': 'link'
+                };
+
+                const varType = typeMap[type];
+                const varState = stateMap[state];
+
+                // Get variables for this button type and state
+                let bgVariable, textVariable, borderVariable, iconVariable;
+
+                if (buttonCollection) {
+                    const allVariables = figma.variables.getLocalVariables();
+                    bgVariable = allVariables.find(v =>
+                        v.name === `button/${varType}/${varState}/bg` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                    textVariable = allVariables.find(v =>
+                        v.name === `button/${varType}/${varState}/text` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                    borderVariable = allVariables.find(v =>
+                        v.name === `button/${varType}/${varState}/border` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                    iconVariable = allVariables.find(v =>
+                        v.name === `button/${varType}/${varState}/icon` &&
+                        v.variableCollectionId === buttonCollection.id
+                    );
+                }
 
                 // Type and State styling using user colors
                 let bgColor, borderColor, textColor, hasBorder = false, hasUnderline = false;
@@ -3052,7 +3740,7 @@ figma.ui.onmessage = async (msg) => {
                     else if (state === 'Disable') { bgColor = 'transparent'; textColor = '#8E8E8E'; hasUnderline = true; }
                 }
 
-                // Set background
+                // Set background with variable binding
                 if (bgColor === 'transparent') {
                     button.fills = [];
                 } else if (bgColor.startsWith('rgba')) {
@@ -3062,33 +3750,134 @@ figma.ui.onmessage = async (msg) => {
                     button.fills = [{ type: 'SOLID', color: hexToRgb(bgColor) }];
                 }
 
-                // Set border
+                // Bind background to variable if available
+                if (bgVariable) {
+                    try {
+                        button.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: bgVariable.id } } }];
+                    } catch (e) {
+                        console.log('Could not bind bg variable:', e);
+                    }
+                }
+
+                // Set border with variable binding
                 if (hasBorder) {
                     button.strokes = [{ type: 'SOLID', color: hexToRgb(borderColor) }];
                     button.strokeWeight = 1;
+
+                    // Bind border to variable if available
+                    if (borderVariable) {
+                        try {
+                            button.strokes = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: borderVariable.id } } }];
+                        } catch (e) {
+                            console.log('Could not bind border variable:', e);
+                        }
+                    }
                 }
 
                 // Create left icon instance from shared component
                 const leftIcon = leftIconComp.createInstance();
                 leftIcon.name = "Left Icon";
-                leftIcon.resize(config.iconSize, config.iconSize);
-                leftIcon.visible = false; // Hidden by default
+
+                // Scale the icon properly based on size
+                const iconScale = config.iconSize / 20; // 20 is the base icon size
+                leftIcon.rescale(iconScale);
+                leftIcon.visible = true; // Make visible by default to see them
+
+                // Set icon color (icons use strokes, not fills)
+                try {
+                    // Find all vector nodes in the icon and set their stroke color
+                    const vectors = leftIcon.findAll(node => node.type === 'VECTOR');
+                    vectors.forEach(vector => {
+                        if (vector.strokes && vector.strokes.length > 0) {
+                            vector.strokes = [{ type: 'SOLID', color: hexToRgb(textColor) }];
+
+                            // Bind icon stroke color to variable if available
+                            if (iconVariable) {
+                                try {
+                                    vector.strokes = [{
+                                        type: 'SOLID',
+                                        color: { r: 0, g: 0, b: 0 },
+                                        boundVariables: {
+                                            color: {
+                                                type: 'VARIABLE_ALIAS',
+                                                id: iconVariable.id
+                                            }
+                                        }
+                                    }];
+                                } catch (e) {
+                                    console.log('Could not bind left icon stroke variable:', e);
+                                }
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.log('Could not set left icon color:', e);
+                }
 
                 // Add text
                 const text = figma.createText();
                 text.name = "Button Text";
                 text.characters = buttonText;
-                text.fontSize = config.fontSize;
-                text.fontName = { family: "Avenir", style: config.fontWeight };
+                // Apply text style first
+                if (textStylesMap && textStylesMap[config.sizeName]) {
+                    text.textStyleId = textStylesMap[config.sizeName].id;
+                } else {
+                    text.fontSize = config.fontSize;
+                    text.fontName = { family: "Avenir", style: config.fontWeight };
+                    text.lineHeight = { value: size === 'SM' ? 140 : 150, unit: "PERCENT" };
+                }
+
                 text.fills = [{ type: 'SOLID', color: hexToRgb(textColor) }];
                 text.textDecoration = hasUnderline ? "UNDERLINE" : "NONE";
-                text.lineHeight = { value: size === 'SM' ? 140 : 150, unit: "PERCENT" };
+
+                // Bind text color to variable if available
+                if (textVariable) {
+                    try {
+                        text.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: textVariable.id } } }];
+                    } catch (e) {
+                        console.log('Could not bind text variable:', e);
+                    }
+                }
 
                 // Create right icon instance from shared component
                 const rightIcon = rightIconComp.createInstance();
                 rightIcon.name = "Right Icon";
-                rightIcon.resize(config.iconSize, config.iconSize);
-                rightIcon.visible = false; // Hidden by default
+
+                // Scale the icon properly based on size
+                const iconScaleRight = config.iconSize / 20; // 20 is the base icon size
+                rightIcon.rescale(iconScaleRight);
+                rightIcon.visible = true; // Make visible by default to see them
+
+                // Set icon color (icons use strokes, not fills)
+                try {
+                    // Find all vector nodes in the icon and set their stroke color
+                    const vectors = rightIcon.findAll(node => node.type === 'VECTOR');
+                    vectors.forEach(vector => {
+                        if (vector.strokes && vector.strokes.length > 0) {
+                            vector.strokes = [{ type: 'SOLID', color: hexToRgb(textColor) }];
+
+                            // Bind icon stroke color to variable if available
+                            if (iconVariable) {
+                                try {
+                                    vector.strokes = [{
+                                        type: 'SOLID',
+                                        color: { r: 0, g: 0, b: 0 },
+                                        boundVariables: {
+                                            color: {
+                                                type: 'VARIABLE_ALIAS',
+                                                id: iconVariable.id
+                                            }
+                                        }
+                                    }];
+                                } catch (e) {
+                                    console.log('Could not bind right icon stroke variable:', e);
+                                }
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.log('Could not set right icon color:', e);
+                }
 
                 // Add children to button in order
                 button.appendChild(leftIcon);
@@ -3103,10 +3892,13 @@ figma.ui.onmessage = async (msg) => {
             const types = ['Primary', 'Destructive', 'Ghost', 'Line', 'Link'];
             const states = ['Normal', 'Hover', 'Click', 'Disable'];
 
+            // Get the button collection for variable binding
+            let buttonCollection = figma.variables.getLocalVariableCollections().find(c => c.name === "Button");
+
             for (const size of sizes) {
                 for (const type of types) {
                     for (const state of states) {
-                        components.push(createButton(size, type, state, sharedLeftIconComponent, sharedRightIconComponent));
+                        components.push(createButton(size, type, state, sharedLeftIconComponent, sharedRightIconComponent, buttonCollection, textStylesMap));
                     }
                 }
             }
