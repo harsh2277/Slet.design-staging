@@ -4324,10 +4324,27 @@ figma.ui.onmessage = async (msg) => {
                             const rgb = hexToRgb(colorH);
                             variable.setValueForMode(modeId, rgb);
                         }
+
+                        // Also helper text color by state
+                        const helperColorName = `input/helper/${varState}/color`;
+                        let helperVar = figma.variables.getLocalVariables().find(v => v.name === helperColorName && v.variableCollectionId === collection.id);
+                        if (!helperVar) helperVar = figma.variables.createVariable(helperColorName, collection, "COLOR");
+
+                        let helperHex = (uiState === 'Error') ? '#EF4444' : '#6B7280';
+                        helperVar.setValueForMode(modeId, hexToRgb(helperHex));
                     }
                 }
 
-                const spacingVars = { 'spacing/vertical': 10, 'spacing/horizontal': 12, 'radius': customRadius };
+                // Add general label and asterisk color vars
+                let labelVar = figma.variables.getLocalVariables().find(v => v.name === 'input/label/color' && v.variableCollectionId === collection.id);
+                if (!labelVar) labelVar = figma.variables.createVariable('input/label/color', collection, "COLOR");
+                labelVar.setValueForMode(modeId, hexToRgb('#374151'));
+
+                let asteriskVar = figma.variables.getLocalVariables().find(v => v.name === 'input/asterisk/color' && v.variableCollectionId === collection.id);
+                if (!asteriskVar) asteriskVar = figma.variables.createVariable('input/asterisk/color', collection, "COLOR");
+                asteriskVar.setValueForMode(modeId, hexToRgb('#FF0000'));
+
+                const spacingVars = { 'spacing/vertical': 10, 'spacing/horizontal': 12, 'spacing/horizontalLeft': 14, 'radius': customRadius };
                 for (const [key, val] of Object.entries(spacingVars)) {
                     const varName = `input/${key}`;
                     let variable = figma.variables.getLocalVariables().find(v => v.name === varName && v.variableCollectionId === collection.id);
@@ -4447,6 +4464,19 @@ figma.ui.onmessage = async (msg) => {
                 input.itemSpacing = 6;
                 input.fills = [];
 
+                let labelColorVar, asteriskColorVar, helperColorVar;
+                try {
+                    const inputCollection = figma.variables.getLocalVariableCollections().find(c => c.name === "Input");
+                    if (inputCollection) {
+                        const allVariables = figma.variables.getLocalVariables();
+                        const stateMapObj = { 'Normal': 'default', 'Hover': 'hover', 'Click': 'active', 'Error': 'error', 'Disable': 'disabled' };
+                        const varState = stateMapObj[state];
+                        labelColorVar = allVariables.find(v => v.name === 'input/label/color' && v.variableCollectionId === inputCollection.id);
+                        asteriskColorVar = allVariables.find(v => v.name === 'input/asterisk/color' && v.variableCollectionId === inputCollection.id);
+                        helperColorVar = allVariables.find(v => v.name === `input/helper/${varState}/color` && v.variableCollectionId === inputCollection.id);
+                    }
+                } catch (e) { }
+
                 // Only create label frame for non-Search types
                 let labelFrame;
                 if (type !== 'Search') {
@@ -4469,6 +4499,9 @@ figma.ui.onmessage = async (msg) => {
                         labelText.lineHeight = { value: 21, unit: "PIXELS" };
                     }
                     labelText.fills = [{ type: 'SOLID', color: hexToRgb('#374151') }];
+                    if (labelColorVar) {
+                        try { labelText.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: labelColorVar.id } } }]; } catch (e) { }
+                    }
 
                     // Add required asterisk (*)
                     const requiredAsterisk = figma.createText();
@@ -4482,6 +4515,9 @@ figma.ui.onmessage = async (msg) => {
                         requiredAsterisk.lineHeight = { value: 21, unit: "PIXELS" };
                     }
                     requiredAsterisk.fills = [{ type: 'SOLID', color: hexToRgb('#FF0000') }];
+                    if (asteriskColorVar) {
+                        try { requiredAsterisk.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: asteriskColorVar.id } } }]; } catch (e) { }
+                    }
                     requiredAsterisk.visible = false;
 
                     const infoIcon = sharedInfoIcon.createInstance();
@@ -4524,7 +4560,7 @@ figma.ui.onmessage = async (msg) => {
                 }
 
                 let bgVar, borderVar, textVar, iconVar;
-                let vPaddingVar, hPaddingVar, radiusVar, fontSizeVar, lineHeightVar;
+                let vPaddingVar, hPaddingVar, hPaddingLeftVar, radiusVar, fontSizeVar, lineHeightVar;
 
                 try {
                     const inputCollection = figma.variables.getLocalVariableCollections().find(c => c.name === "Input");
@@ -4541,21 +4577,30 @@ figma.ui.onmessage = async (msg) => {
                         iconVar = allVariables.find(v => v.name === `input/${varType}/${varState}/icon` && v.variableCollectionId === inputCollection.id);
                         vPaddingVar = allVariables.find(v => v.name === `input/spacing/vertical` && v.variableCollectionId === inputCollection.id);
                         hPaddingVar = allVariables.find(v => v.name === `input/spacing/horizontal` && v.variableCollectionId === inputCollection.id);
+                        hPaddingLeftVar = allVariables.find(v => v.name === `input/spacing/horizontalLeft` && v.variableCollectionId === inputCollection.id);
+                        radiusVar = allVariables.find(v => v.name === `input/radius` && v.variableCollectionId === inputCollection.id);
                         radiusVar = allVariables.find(v => v.name === `input/radius` && v.variableCollectionId === inputCollection.id);
                         fontSizeVar = allVariables.find(v => v.name === `input/text/fontSize` && v.variableCollectionId === inputCollection.id);
                         lineHeightVar = allVariables.find(v => v.name === `input/text/lineHeight` && v.variableCollectionId === inputCollection.id);
                     }
                 } catch (e) { }
 
+
                 if (type !== 'Phone Number') {
                     if (hPaddingVar) {
                         try {
-                            inputContainer.paddingLeft = 0; inputContainer.paddingRight = 0;
-                            inputContainer.setBoundVariable('paddingLeft', hPaddingVar);
+                            inputContainer.paddingLeft = type === 'Text Field' ? 14 : 0;
+                            inputContainer.paddingRight = 0;
+                            if (type === 'Text Field') {
+                                if (hPaddingLeftVar) inputContainer.setBoundVariable('paddingLeft', hPaddingLeftVar);
+                            } else {
+                                inputContainer.setBoundVariable('paddingLeft', hPaddingVar);
+                            }
                             inputContainer.setBoundVariable('paddingRight', hPaddingVar);
                         } catch (e) { }
                     } else {
-                        inputContainer.paddingLeft = 12; inputContainer.paddingRight = 12;
+                        inputContainer.paddingLeft = type === 'Text Field' ? 14 : 12;
+                        inputContainer.paddingRight = 12;
                     }
 
                     if (vPaddingVar) {
@@ -4634,6 +4679,9 @@ figma.ui.onmessage = async (msg) => {
                         placeholderText.lineHeight = { value: 21, unit: "PIXELS" };
                     }
                     placeholderText.fills = [{ type: 'SOLID', color: hexToRgb(placeholderColor) }];
+                    if (textVar) {
+                        try { placeholderText.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: textVar.id } } }]; } catch (e) { }
+                    }
                     placeholderText.layoutAlign = "STRETCH";
                     placeholderText.layoutGrow = 1;
                     const rightIcon = sharedRightIcon.createInstance();
@@ -4763,13 +4811,24 @@ figma.ui.onmessage = async (msg) => {
                         codeText.fontName = { family: "Inter", style: "Medium" };
                         codeText.lineHeight = { value: 140, unit: "PERCENT" };
                     }
-                    codeText.fills = [{ type: 'SOLID', color: hexToRgb(textColor) }];
-                    if (textVar) {
-                        try { codeText.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: textVar.id } } }]; } catch (e) { }
+                    codeText.fills = [{ type: 'SOLID', color: hexToRgb(iconColor) }];
+                    if (iconVar) {
+                        try { codeText.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: iconVar.id } } }]; } catch (e) { }
                     }
 
                     const dropdownIcon = sharedDropdownArrow.createInstance();
                     dropdownIcon.name = "arrow-down-1";
+                    try {
+                        const vectors = dropdownIcon.findAll(n => n.type === 'VECTOR');
+                        vectors.forEach(v => {
+                            if (v.fills && v.fills.length > 0) {
+                                v.fills = [{ type: 'SOLID', color: hexToRgb(iconColor) }];
+                                if (iconVar) {
+                                    v.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: iconVar.id } } }];
+                                }
+                            }
+                        });
+                    } catch (e) { }
 
                     countryCodeField.appendChild(codeText);
                     countryCodeField.appendChild(dropdownIcon);
@@ -4919,6 +4978,9 @@ figma.ui.onmessage = async (msg) => {
                     hintText.lineHeight = { value: 18, unit: "PIXELS" };
                 }
                 hintText.fills = [{ type: 'SOLID', color: hexToRgb(state === 'Error' ? '#EF4444' : '#6B7280') }];
+                if (helperColorVar) {
+                    try { hintText.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, boundVariables: { color: { type: 'VARIABLE_ALIAS', id: helperColorVar.id } } }]; } catch (e) { }
+                }
                 hintText.layoutAlign = "STRETCH";
                 hintText.layoutGrow = 1;
 
