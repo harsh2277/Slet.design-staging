@@ -1,5 +1,16 @@
 figma.showUI(__html__, { width: 400, height: 700 });
 
+function notifyUI(actionType, success, message, errorDetails = null) {
+    const finalMessage = success ? message : (errorDetails ? `${message}: ${errorDetails}` : message);
+    figma.ui.postMessage({
+        type: 'action-complete',
+        actionType,
+        success,
+        message: finalMessage
+    });
+    figma.notify(finalMessage);
+}
+
 figma.ui.onmessage = async (msg) => {
     if (msg.type === "close-plugin") {
         figma.closePlugin();
@@ -162,11 +173,9 @@ figma.ui.onmessage = async (msg) => {
                 }
             }
 
-            figma.ui.postMessage({ type: 'variables-created', success: true });
-            figma.notify('Variables created successfully!');
+            notifyUI('variables', true, 'Color variables created successfully!');
         } catch (error) {
-            figma.ui.postMessage({ type: 'variables-created', success: false, error: error.message });
-            figma.notify('Error creating variables: ' + error.message);
+            notifyUI('variables', false, 'Failed to create color variables', error.message);
         }
     }
 
@@ -224,9 +233,9 @@ figma.ui.onmessage = async (msg) => {
                 variable.setValueForMode(mobileModeId, mobileValue);
             }
 
-            figma.notify(`Created ${numberOfTokens} spacing tokens with base ${baseValue}px (Desktop: 100%, Tablet: 75%, Mobile: 50%)`);
+            notifyUI('spacing', true, `Created ${numberOfTokens} spacing tokens!`);
         } catch (error) {
-            figma.notify('Error creating spacing tokens: ' + error.message);
+            notifyUI('spacing', false, 'Error creating spacing tokens', error.message);
         }
     }
 
@@ -461,9 +470,9 @@ figma.ui.onmessage = async (msg) => {
             figma.currentPage.selection = [frame];
             figma.viewport.scrollAndZoomIntoView([frame]);
 
-            figma.notify('Spacing Token Documentation created successfully!');
+            notifyUI('spacing-doc', true, 'Spacing Documentation created!');
         } catch (error) {
-            figma.notify('Error creating spacing doc: ' + error.message);
+            notifyUI('spacing-doc', false, 'Error creating spacing doc', error.message);
             console.error(error);
         }
     }
@@ -522,9 +531,9 @@ figma.ui.onmessage = async (msg) => {
                 variable.setValueForMode(mobileModeId, mobileValue);
             }
 
-            figma.notify(`Created ${numberOfTokens} padding tokens with base ${baseValue}px (Desktop: 100%, Tablet: 75%, Mobile: 50%)`);
+            notifyUI('padding', true, `Created ${numberOfTokens} padding tokens!`);
         } catch (error) {
-            figma.notify('Error creating padding tokens: ' + error.message);
+            notifyUI('padding', false, 'Error creating padding tokens', error.message);
         }
     }
 
@@ -759,9 +768,9 @@ figma.ui.onmessage = async (msg) => {
             figma.currentPage.selection = [frame];
             figma.viewport.scrollAndZoomIntoView([frame]);
 
-            figma.notify('Padding Token Documentation created successfully!');
+            notifyUI('padding-doc', true, 'Padding Documentation created!');
         } catch (error) {
-            figma.notify('Error creating padding doc: ' + error.message);
+            notifyUI('padding-doc', false, 'Error creating padding doc', error.message);
             console.error(error);
         }
     }
@@ -820,9 +829,9 @@ figma.ui.onmessage = async (msg) => {
                 variable.setValueForMode(mobileModeId, mobileValue);
             }
 
-            figma.notify(`Created ${numberOfTokens} radius tokens with base ${baseValue}px (Desktop: 100%, Tablet: 75%, Mobile: 50%)`);
+            notifyUI('radius', true, `Created ${numberOfTokens} radius tokens!`);
         } catch (error) {
-            figma.notify('Error creating radius tokens: ' + error.message);
+            notifyUI('radius', false, 'Error creating radius tokens', error.message);
         }
     }
 
@@ -1044,9 +1053,9 @@ figma.ui.onmessage = async (msg) => {
             figma.currentPage.selection = [frame];
             figma.viewport.scrollAndZoomIntoView([frame]);
 
-            figma.notify('Radius Token Documentation created successfully!');
+            notifyUI('radius-doc', true, 'Radius Documentation created!');
         } catch (error) {
-            figma.notify('Error creating radius doc: ' + error.message);
+            notifyUI('radius-doc', false, 'Error creating radius doc', error.message);
             console.error(error);
         }
     }
@@ -1107,9 +1116,9 @@ figma.ui.onmessage = async (msg) => {
                 variable.setValueForMode(mobileModeId, mobileValue);
             }
 
-            figma.notify(`Created ${numberOfTokens} stroke tokens with base ${baseValue}px (Desktop: 100%, Tablet: 75%, Mobile: 50%)`);
+            notifyUI('stroke', true, `Created ${numberOfTokens} stroke tokens!`);
         } catch (error) {
-            figma.notify('Error creating stroke tokens: ' + error.message);
+            notifyUI('stroke', false, 'Error creating stroke tokens', error.message);
         }
     }
 
@@ -1331,10 +1340,9 @@ figma.ui.onmessage = async (msg) => {
             figma.currentPage.selection = [frame];
             figma.viewport.scrollAndZoomIntoView([frame]);
 
-            figma.notify('Stroke Token Documentation created successfully!');
+            notifyUI('stroke-doc', true, 'Stroke Documentation created!');
         } catch (error) {
-            figma.notify('Error creating stroke doc: ' + error.message);
-            console.error(error);
+            notifyUI('stroke-doc', false, 'Error creating stroke doc', error.message);
         }
     }
 
@@ -1368,9 +1376,9 @@ figma.ui.onmessage = async (msg) => {
                 createdCount++;
             }
 
-            figma.notify(`Created ${createdCount} shadow styles successfully!`);
+            notifyUI('shadow', true, `Created ${createdCount} shadow styles!`);
         } catch (error) {
-            figma.notify('Error creating shadow styles: ' + error.message);
+            notifyUI('shadow', false, 'Error creating shadow styles', error.message);
         }
     }
 
@@ -1663,9 +1671,9 @@ figma.ui.onmessage = async (msg) => {
                 }
             ];
 
-            figma.notify('Created Desktop, Tablet, and Mobile grid styles successfully!');
+            notifyUI('grid', true, 'Grid styles created successfully!');
         } catch (error) {
-            figma.notify('Error creating grid styles: ' + error.message);
+            notifyUI('grid', false, 'Error creating grid styles', error.message);
         }
     }
 
@@ -1975,9 +1983,9 @@ figma.ui.onmessage = async (msg) => {
                 createdCount++;
             }
 
-            figma.notify(`Created ${createdCount} typography styles successfully!`);
+            notifyUI('typography-styles', true, `Created ${createdCount} typography styles!`);
         } catch (error) {
-            figma.notify('Error creating typography styles: ' + error.message);
+            notifyUI('typography-styles', false, 'Error creating typography styles', error.message);
         }
     }
 
@@ -2215,9 +2223,9 @@ figma.ui.onmessage = async (msg) => {
             figma.currentPage.selection = [frame];
             figma.viewport.scrollAndZoomIntoView([frame]);
 
-            figma.notify('Typography Token Documentation created successfully!');
+            notifyUI('typography-doc', true, 'Typography Documentation created!');
         } catch (error) {
-            figma.notify('Error creating typography doc: ' + error.message);
+            notifyUI('typography-doc', false, 'Error creating typography doc', error.message);
             console.error(error);
         }
     }
@@ -2373,9 +2381,9 @@ figma.ui.onmessage = async (msg) => {
                 }
             }
 
-            figma.notify(`Created typography system: Font family & weight variables, ${typographyData.length * 3} property variables (size/line-height/spacing), and ${textStylesCreated} text styles with variable bindings!`);
+            notifyUI('typography-tokens', true, 'Typography system created successfully!');
         } catch (error) {
-            figma.notify('Error creating typography tokens: ' + error.message);
+            notifyUI('typography-tokens', false, 'Error creating typography tokens', error.message);
             console.error(error);
         }
     }

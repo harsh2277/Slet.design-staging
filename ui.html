@@ -116,6 +116,108 @@
             --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
+        /* Toast Notification Styles */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 250px;
+            padding: 12px 16px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastSlideUp 0.3s ease-out forwards;
+            pointer-events: auto;
+            border: 1px solid #E5E7EB;
+        }
+
+        @keyframes toastSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast.hiding {
+            animation: toastFadeOut 0.3s ease-out forwards;
+        }
+
+        @keyframes toastFadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .toast-success .toast-icon {
+            background: #E6FFFA;
+            color: #059669;
+        }
+
+        .toast-error .toast-icon {
+            background: #FFF5F5;
+            color: #E53E3E;
+        }
+
+        .toast-loading .toast-icon {
+            background: #EBF8FF;
+            color: #3182CE;
+        }
+
+        .toast-message {
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1F2937;
+        }
+
+        .toast-spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid #3182CE;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: toastSpin 1s linear infinite;
+        }
+
+        @keyframes toastSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -4307,6 +4409,9 @@
                     return;
                 }
 
+                // Show loading toast
+                window.activeActionToastId = showLoadingToast('Creating spacing tokens...');
+
                 // Send message to code.js to create spacing variables
                 parent.postMessage({
                     pluginMessage: {
@@ -4335,6 +4440,9 @@
                     return;
                 }
 
+                // Show loading toast
+                window.activeActionToastId = showLoadingToast('Creating padding tokens...');
+
                 // Send message to code.js to create padding variables
                 parent.postMessage({
                     pluginMessage: {
@@ -4362,6 +4470,9 @@
                     }, '*');
                     return;
                 }
+
+                // Show loading toast
+                window.activeActionToastId = showLoadingToast('Creating radius tokens...');
 
                 // Send message to code.js to create radius variables
                 parent.postMessage({
@@ -5049,6 +5160,9 @@
                 { name: 'Bold', weight: 700 }
             ];
 
+            // Show loading toast
+            window.activeActionToastId = showLoadingToast('Creating typography tokens...');
+
             parent.postMessage({
                 pluginMessage: {
                     type: 'create-typography-tokens',
@@ -5179,15 +5293,13 @@
             const colorName = document.getElementById('new-color-name').value.trim();
             const colorHex = document.getElementById('new-color-hex').value.trim();
 
-            console.log('Adding color:', colorName, colorHex);
-
             if (!colorName) {
-                alert('Please enter a color name');
+                showErrorToast('Please enter a color name');
                 return;
             }
 
             if (!/^#?[0-9A-F]{6}$/i.test(colorHex)) {
-                alert('Please enter a valid hex color');
+                showErrorToast('Please enter a valid hex color');
                 return;
             }
 
@@ -5197,17 +5309,16 @@
             const addedColorsCount = existingColors.length - 1; // Subtract 1 for Brand color
 
             if (addedColorsCount >= 2) {
-                alert('You can only add 3 colors maximum');
+                showErrorToast('You can only add 3 colors maximum');
                 return;
             }
 
             // Ensure hex starts with #
             const finalHex = colorHex.startsWith('#') ? colorHex : '#' + colorHex;
 
-            console.log('Final hex:', finalHex);
-
             // Add the color to the sidebar
             addColorToSidebar(colorName, finalHex);
+            showSuccessToast(`Successfully added ${colorName}!`);
 
             // Close modal
             closeAddColorModal();
@@ -5421,6 +5532,9 @@
                 return;
             }
 
+            // Show loading toast
+            window.activeActionToastId = showLoadingToast('Creating color variables...');
+
             // Send message to Figma plugin to create variables
             parent.postMessage({
                 pluginMessage: {
@@ -5453,12 +5567,15 @@
 
         // Listen for response from Figma
         window.addEventListener('message', function (event) {
-            if (event.data.pluginMessage && event.data.pluginMessage.type === 'variables-created') {
-                if (event.data.pluginMessage.success) {
-                    console.log('Variables created successfully!');
+            const msg = event.data.pluginMessage;
+            if (msg && (msg.type === 'variables-created' || msg.type === 'action-complete')) {
+                const toastId = window.activeActionToastId;
+                if (msg.success) {
+                    showSuccessToast(msg.message || 'Action completed successfully!', toastId);
                 } else {
-                    console.error('Error creating variables:', event.data.pluginMessage.error);
+                    showErrorToast(msg.message || msg.error || 'Something went wrong', toastId);
                 }
+                window.activeActionToastId = null;
             }
         });
 
@@ -5908,8 +6025,95 @@
                 generateColorShadesForCard(colorName, hexValue, shadeCount);
             }
         }
+
+        // --- Toast Notification Helpers ---
+        let toastCount = 0;
+        let activeToasts = {};
+
+        function showLoadingToast(message) {
+            return showToast(message, 'loading', 0);
+        }
+
+        function showSuccessToast(message, idToUpdate = null) {
+            if (idToUpdate) {
+                updateToast(idToUpdate, message, 'success', 3000);
+            } else {
+                showToast(message, 'success', 3000);
+            }
+        }
+
+        function showErrorToast(message, idToUpdate = null) {
+            if (idToUpdate) {
+                updateToast(idToUpdate, message, 'error', 4000);
+            } else {
+                showToast(message, 'error', 4000);
+            }
+        }
+
+        function showToast(message, type = 'success', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            const id = 'toast-' + (toastCount++);
+
+            const toast = document.createElement('div');
+            toast.id = id;
+            toast.className = `toast toast-${type}`;
+
+            let iconCode = '';
+            if (type === 'success') {
+                iconCode = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.6667 3.5L5.25 9.91667L2.33334 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            } else if (type === 'error') {
+                iconCode = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+            } else if (type === 'loading') {
+                iconCode = '<div class="toast-spinner"></div>';
+            }
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconCode}</div>
+                <div class="toast-message">${message}</div>
+            `;
+
+            container.appendChild(toast);
+
+            if (duration > 0) {
+                setTimeout(() => hideToast(id), duration);
+            }
+
+            return id;
+        }
+
+        function updateToast(id, message, type = 'success', duration = 3000) {
+            const toast = document.getElementById(id);
+            if (toast) {
+                toast.className = `toast toast-${type}`;
+                let iconCode = '';
+                if (type === 'success') {
+                    iconCode = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11.6667 3.5L5.25 9.91667L2.33334 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                } else if (type === 'error') {
+                    iconCode = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                }
+
+                const iconContainer = toast.querySelector('.toast-icon');
+                if (iconContainer) iconContainer.innerHTML = iconCode;
+
+                const messageContainer = toast.querySelector('.toast-message');
+                if (messageContainer) messageContainer.textContent = message;
+
+                if (duration > 0) {
+                    setTimeout(() => hideToast(id), duration);
+                }
+            }
+        }
+
+        function hideToast(id) {
+            const toast = document.getElementById(id);
+            if (toast) {
+                toast.classList.add('hiding');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }
     </script>
 
+    <div id="toast-container"></div>
 </body>
 
 </html>
