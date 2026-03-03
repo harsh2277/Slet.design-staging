@@ -5271,4 +5271,212 @@ figma.ui.onmessage = async (msg) => {
             console.error(error);
         }
     }
+
+    if (msg.type === "create-icons-doc") {
+        try {
+            const library = msg.library;
+            const category = msg.category;
+            const iconsArray = msg.icons || [];
+
+            // Load fonts
+            await figma.loadFontAsync({ family: "Poppins", style: "SemiBold" });
+            await figma.loadFontAsync({ family: "Montserrat", style: "Medium" });
+            await figma.loadFontAsync({ family: "Inter", style: "Regular" });
+            await figma.loadFontAsync({ family: "Inter", style: "Medium" });
+            await figma.loadFontAsync({ family: "Inter", style: "Bold" });
+
+            // Helper function to convert hex to RGB
+            function hexToRgb(hex) {
+                hex = hex.replace('#', '');
+                if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                return {
+                    r: parseInt(hex.substring(0, 2), 16) / 255,
+                    g: parseInt(hex.substring(2, 4), 16) / 255,
+                    b: parseInt(hex.substring(4, 6), 16) / 255
+                };
+            }
+
+            // Create main frame (1160px width, blue top border, white background)
+            const frame = figma.createFrame();
+            frame.name = `${library} - ${category} Doc`;
+            frame.resize(1160, 440);
+            frame.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+            frame.paddingTop = 40;
+            frame.paddingBottom = 40;
+            frame.paddingLeft = 40;
+            frame.paddingRight = 40;
+            frame.layoutMode = "VERTICAL";
+            frame.primaryAxisSizingMode = "AUTO";
+            frame.counterAxisSizingMode = "FIXED";
+            frame.itemSpacing = 40;
+
+            // Top Border styling
+            frame.strokes = [{ type: 'SOLID', color: hexToRgb('#1350FF') }];
+            frame.strokeWeight = 8;
+            frame.strokeTopWeight = 8;
+            frame.strokeBottomWeight = 0;
+            frame.strokeLeftWeight = 0;
+            frame.strokeRightWeight = 0;
+
+            // Header Section
+            const headerSection = figma.createFrame();
+            headerSection.name = "Header Section";
+            headerSection.layoutMode = "VERTICAL";
+            headerSection.primaryAxisSizingMode = "AUTO";
+            headerSection.counterAxisSizingMode = "AUTO";
+            headerSection.itemSpacing = 34;
+            headerSection.fills = [];
+
+            // Logo
+            const logoSvg = `<svg width="224" height="32" viewBox="0 0 224 32" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_466_1736)"><g clip-path="url(#clip1_466_1736)"><path d="M47.9502 22.765C46.7073 22.0781 45.7261 21.1295 45.0065 19.952C44.2869 18.7418 43.9271 17.4008 43.9271 15.8962C43.9271 14.3916 44.2869 13.0506 45.0065 11.8404C45.7261 10.6302 46.7073 9.71438 47.9502 9.0275C49.1931 8.34063 50.5996 8.01355 52.1696 8.01355C53.4125 8.01355 54.59 8.24251 55.604 8.66771C56.6506 9.09292 57.5337 9.74708 58.2533 10.5648L56.4217 12.2983C55.3096 11.0881 53.9358 10.4994 52.3004 10.4994C51.2538 10.4994 50.3052 10.7283 49.4548 11.1862C48.6044 11.6442 47.9829 12.2983 47.4923 13.116C47.0344 13.9337 46.8054 14.8496 46.8054 15.8962C46.8054 16.9429 47.0344 17.8587 47.4923 18.6764C47.9502 19.4941 48.6044 20.1483 49.4548 20.6062C50.3052 21.0641 51.2211 21.2931 52.3004 21.2931C53.9358 21.2931 55.3096 20.6716 56.4217 19.4614L58.2533 21.2277C57.5337 22.0781 56.6506 22.6995 55.604 23.1247C54.5573 23.5499 53.4125 23.7789 52.1369 23.7789C50.5996 23.7789 49.1931 23.4191 47.9502 22.765Z" fill="black"/><path d="M63.6175 22.7649C62.3745 22.0781 61.3606 21.1295 60.641 19.9193C59.9214 18.7091 59.5616 17.3681 59.5616 15.8635C59.5616 14.3589 59.9214 13.0179 60.641 11.8077C61.3606 10.5975 62.3418 9.64895 63.6175 8.96207C64.8604 8.2752 66.2995 7.94812 67.8695 7.94812C69.4395 7.94812 70.846 8.2752 72.1216 8.96207C73.3645 9.64895 74.3785 10.5975 75.098 11.775C75.8176 12.9852 76.1774 14.3262 76.1774 15.8308C76.1774 17.3354 75.8176 18.6764 75.098 19.8866C74.3785 21.0968 73.3972 22.0126 72.1216 22.6995C70.8787 23.3864 69.4395 23.7135 67.8695 23.7135C66.2995 23.7789 64.8604 23.4191 63.6175 22.7649ZM70.617 20.5735C71.4347 20.1156 72.0889 19.4614 72.5468 18.6437C73.0047 17.826 73.2337 16.8775 73.2337 15.8635C73.2337 14.8496 73.0047 13.901 72.5468 13.0833C72.0889 12.2656 71.4347 11.6114 70.617 11.1535C69.7993 10.6956 68.8835 10.4667 67.8368 10.4667C66.8229 10.4667 65.8743 10.6956 65.0566 11.1535C64.2389 11.6114 63.5848 12.2656 63.1268 13.0833C62.6689 13.901 62.44 14.8496 62.44 15.8635C62.44 16.8775 62.6689 17.826 63.1268 18.6437C63.5848 19.4614 64.2389 20.1156 65.0566 20.5735C65.8743 21.0314 66.7902 21.2604 67.8368 21.2604C68.8835 21.2604 69.7993 21.0314 70.617 20.5735Z" fill="black"/><path d="M79.1539 8.17706H85.8591C87.4945 8.17706 88.9663 8.50414 90.242 9.1256C91.5176 9.74706 92.4988 10.6629 93.2184 11.8404C93.9053 13.0179 94.2651 14.3589 94.2651 15.8635C94.2651 17.4008 93.9053 18.7418 93.2184 19.8866C92.5315 21.0641 91.5176 21.9472 90.242 22.6014C88.9663 23.2228 87.5272 23.5499 85.8918 23.5499H79.1539V8.17706ZM85.7282 21.1295C86.8403 21.1295 87.8543 20.9006 88.7047 20.4753C89.5551 20.0501 90.2093 19.4287 90.6672 18.6437C91.1251 17.8587 91.354 16.9102 91.354 15.8635C91.354 14.8168 91.1251 13.8683 90.6672 13.0833C90.2093 12.2983 89.5551 11.6768 88.7047 11.2516C87.8543 10.8264 86.8403 10.5975 85.7282 10.5975H81.9995V21.1295H85.7282Z" fill="black"/><path d="M108.82 21.1622V23.5499H97.3069V8.17706H108.526V10.5648H100.153V14.5552H107.577V16.9102H100.153V21.1622H108.82Z" fill="black"/><path d="M115.133 10.5975H110.03V8.17706H123.081V10.5975H117.978V23.5499H115.133V10.5975Z" fill="black"/><path d="M138.879 8.17706V23.5499H136.033V16.9756H128.085V23.5499H125.24V8.17706H128.085V14.5225H136.033V8.17706H138.879Z" fill="black"/><path d="M154.514 21.1622V23.5499H143V8.17706H154.21901 10.5648H145.846V14.5552H153.271V16.9102H145.846V21.1622H154.514Z" fill="black"/><path d="M160.597 22.7649C159.354 22.0781 158.34 21.1295 157.621 19.9193C156.901 18.7091 156.542 17.3681 156.542 15.8635C156.542 14.3589 156.901 13.0179 157.621 11.8077C158.34 10.5975 159.322 9.64895 160.597 8.96207C161.873 8.2752 163.279 7.94812 164.849 7.94812C166.419 7.94812 167.826 8.2752 169.101 8.96207C170.344 9.64895 171.358 10.5975 172.078 11.775C172.797 12.9852 173.157 14.3262 173.157 15.8308C173.157 17.3354 172.797 18.6764 172.078 19.8866C171.358 21.0968 170.377 22.0126 169.101 22.6995C167.859 23.3864 166.419 23.7135 164.849 23.7135C163.247 23.7789 161.84 23.4191 160.597 22.7649ZM167.597 20.5735C168.415 20.1156 169.069 19.4614 169.527 18.6437C169.985 17.826 170.214 16.8775 170.214 15.8635C170.214 14.8496 169.069 13.901 169.527 13.0833C169.069 12.2656 168.415 11.6114 167.597 11.1535C166.779 10.6956 165.863 10.4667 164.817 10.4667C163.803 10.4667 162.854 10.6956 162.036 11.1535C161.219 11.6114 160.565 12.2656 160.107 13.0833C159.649 13.901 159.42 14.8496 159.42 15.8635C159.42 16.8775 159.649 17.826 160.107 18.6437C160.565 19.4614 161.219 20.1156 162.036 20.5735C162.854 21.0314 163.77 21.2604 164.817 21.2604C165.863 21.2604 166.779 21.0314 167.597 20.5735Z" fill="black"/><path d="M186.175 23.5499L183.035 19.0362C182.904 19.0362 182.708 19.0689 182.446 19.0689H178.979V23.5499H176.134V8.17706H182.446C183.787 8.17706 184.932 8.40602 185.913 8.83123C186.895 9.25643 187.647 9.9106 188.17 10.7283C188.694 11.546 188.955 12.5273 188.955 13.6393C188.955 14.7841 188.661 15.7981 188.105 16.6158C187.549 17.4662 186.731 18.0877 185.685 18.4801L189.25 23.5499H186.175ZM185.161 11.3825C184.507 10.8591 183.558 10.5975 182.316 10.5975H178.979V16.7139H182.316C183.558 16.7139 184.507 16.4522 185.161 15.8962C185.815 15.3729 186.142 14.6206 186.142 13.6393C186.11 12.6581 185.815 11.9058 185.161 11.3825Z" fill="black"/><path d="M203.707 21.1622V23.5499H192.193V8.17706H203.412V10.5648H195.039V14.5552H202.464V16.9102H195.039V21.1622H203.707Z" fill="black"/><path d="M221.009 23.5499L220.977 13.3777L215.94 21.8164H214.664L209.627 13.5085V23.5499H206.912V8.17706H209.267L215.384 18.3493L221.336 8.17706H223.691L223.724 23.5499H221.009Z" fill="black"/><path d="M34.1474 24.5312H1.83165C0.327072 24.5312 -0.523342 22.8303 0.392488 21.6201L15.9943 1.01395C17.041 -0.359794 19.1016 -0.359794 20.1155 1.01395L35.6192 21.5874C36.5023 22.7976 35.6519 24.5312 34.1474 24.5312Z" fill="url(#paint0_linear_466_1736)"/><path d="M4.15395 28.5215L16.7466 11.9385C17.5643 10.8591 19.167 10.8918 19.952 11.9385L32.4465 28.5215C33.4278 29.8626 32.512 31.727 30.8438 31.727H5.75665C4.08853 31.727 3.14 29.8299 4.15395 28.5215Z" fill="url(#paint1_linear_466_1736)"/><path d="M29.4047 24.5312L19.952 11.9385C19.1343 10.8591 17.5643 10.8591 16.7466 11.9385L7.1958 24.5312H29.4047Z" fill="#6699FF"/></g></g><defs><linearGradient id="paint0_linear_466_1736" x1="0.0140991" y1="12.2574" x2="35.977" y2="12.2574" gradientUnits="userSpaceOnUse"><stop stop-color="#3F71FF"/><stop offset="1" stop-color="#6A73FF"/></linearGradient><linearGradient id="paint1_linear_466_1736" x1="3.73645" y1="21.4341" x2="32.8498" y2="21.4341" gradientUnits="userSpaceOnUse"><stop stop-color="#3F71FF"/><stop offset="1" stop-color="#6A73FF"/></linearGradient><clipPath id="clip0_466_1736"><rect width="224" height="31.727" fill="white"/></clipPath><clipPath id="clip1_466_1736"><rect width="223.724" height="31.727" fill="white"/></clipPath></defs></svg>`;
+            const logo = figma.createNodeFromSvg(logoSvg);
+            logo.name = "logo - Horizontal";
+            logo.resize(224, 31.73);
+            headerSection.appendChild(logo);
+
+            // Sub-header (Title + Subtitle)
+            const subHeader = figma.createFrame();
+            subHeader.name = "Header Info";
+            subHeader.layoutMode = "VERTICAL";
+            subHeader.primaryAxisSizingMode = "AUTO";
+            subHeader.counterAxisSizingMode = "AUTO";
+            subHeader.itemSpacing = 6;
+            subHeader.fills = [];
+
+            const titleText = figma.createText();
+            titleText.characters = `${library} Icon Set`;
+            titleText.fontSize = 40;
+            titleText.fontName = { family: "Poppins", style: "SemiBold" };
+            titleText.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
+
+            const subtitleText = figma.createText();
+            subtitleText.characters = `Explore our diverse ${category} icon set from ${library} for your design.`;
+            subtitleText.fontSize = 16;
+            subtitleText.fontName = { family: "Montserrat", style: "Medium" };
+            subtitleText.fills = [{ type: 'SOLID', color: hexToRgb('#444445') }];
+            subtitleText.letterSpacing = { unit: "PIXELS", value: 0.032 };
+
+            subHeader.appendChild(titleText);
+            subHeader.appendChild(subtitleText);
+            headerSection.appendChild(subHeader);
+            frame.appendChild(headerSection);
+
+            // Icon Grid Section (Preview Box)
+            const iconGrid = figma.createFrame();
+            iconGrid.name = "Icon Preview Grid";
+
+            iconGrid.layoutMode = "HORIZONTAL";
+            try {
+                iconGrid.layoutWrap = "WRAP";
+            } catch (e) { }
+
+            iconGrid.resize(1080, 200); // Set initial width and a larger initial height
+            iconGrid.primaryAxisSizingMode = "FIXED";
+            iconGrid.counterAxisSizingMode = "AUTO";
+
+            iconGrid.itemSpacing = 24;
+            try {
+                iconGrid.counterAxisSpacing = 24; // Vertical spacing between rows
+            } catch (e) { }
+
+            iconGrid.paddingTop = 40;
+            iconGrid.paddingBottom = 40;
+            // Pad to 72 to maintain the 1080 standard width when hugging 20 icons
+            iconGrid.paddingLeft = 40;
+            iconGrid.paddingRight = 40;
+
+            iconGrid.fills = [{ type: 'SOLID', color: hexToRgb('#FAFAFA') }];
+            iconGrid.strokes = [{ type: 'SOLID', color: hexToRgb('#D5D5D6') }];
+            iconGrid.strokeWeight = 1;
+            iconGrid.cornerRadius = 8;
+
+            if (iconsArray.length === 0) {
+                notifyUI('icons-doc', false, `No icons were found for the category: ${category}`);
+                return;
+            }
+
+            // 4. Populate Icon Grid (Using components)
+            for (const icon of iconsArray) {
+                try {
+                    if (!icon.svg || !icon.svg.trim()) continue;
+
+                    // Create Master Component
+                    const component = figma.createComponent();
+                    component.name = icon.name;
+                    component.resize(24, 24);
+                    component.fills = [];
+
+                    // Create SVG node from the text content
+                    const svgNode = figma.createNodeFromSvg(icon.svg);
+                    svgNode.name = "icon";
+
+                    // Center and scale SVG to fit 20x20 inside 24x24 component
+                    const scale = Math.min(20 / svgNode.width, 20 / svgNode.height);
+                    svgNode.resize(svgNode.width * scale, svgNode.height * scale);
+                    svgNode.x = (component.width - svgNode.width) / 2;
+                    svgNode.y = (component.height - svgNode.height) / 2;
+
+                    component.appendChild(svgNode);
+                    iconGrid.appendChild(component);
+                } catch (err) {
+                    console.warn(`[Plugins] Error processing icon ${icon.name}:`, err);
+                }
+            }
+
+            // Sync sizing mode again after adding items to trigger Figma's layout engine
+            iconGrid.counterAxisSizingMode = "AUTO";
+
+            frame.appendChild(iconGrid);
+
+            // Footer Section
+            const footerSection = figma.createFrame();
+            footerSection.name = "Footer Section";
+            footerSection.layoutMode = "VERTICAL";
+            footerSection.primaryAxisSizingMode = "AUTO";
+            footerSection.counterAxisSizingMode = "AUTO";
+            footerSection.itemSpacing = 8;
+            footerSection.fills = [];
+
+            const createdByHeader = figma.createText();
+            createdByHeader.characters = "Created By";
+            createdByHeader.fontSize = 12;
+            createdByHeader.fontName = { family: "Inter", style: "Regular" };
+            createdByHeader.fills = [{ type: 'SOLID', color: hexToRgb('#8A8A8A') }];
+
+            const websiteLabel = figma.createText();
+            // Use gitLink if provided, otherwise default
+            websiteLabel.characters = msg.gitLink ? msg.gitLink.replace('https://github.com/', '') : "Slate.Design.com";
+            websiteLabel.fontSize = 16;
+            websiteLabel.fontName = { family: "Inter", style: "Bold" };
+            websiteLabel.fills = [{ type: 'SOLID', color: hexToRgb('#121212') }];
+
+            footerSection.appendChild(createdByHeader);
+            footerSection.appendChild(websiteLabel);
+            frame.appendChild(footerSection);
+
+            // Position the frame to avoid overlap
+            const existingFrames = figma.currentPage.findAll(n => n.name.includes("- Doc") || n.name.includes("Icon Set"));
+            if (existingFrames.length > 0) {
+                // Find the bottom-most frame
+                let maxY = -Infinity;
+                existingFrames.forEach(f => {
+                    if (f.y + f.height > maxY) maxY = f.y + f.height;
+                });
+                frame.y = maxY + 100; // 100px gap
+            } else {
+                frame.y = figma.viewport.center.y - (frame.height / 2);
+            }
+            frame.x = figma.viewport.center.x - (frame.width / 2);
+
+            figma.currentPage.selection = [frame];
+            // Only zoom if single doc, or just pan to the new one
+            // figma.viewport.scrollAndZoomIntoView([frame]);
+
+            console.log(`Created documentation for ${library} - ${category} with ${iconsArray.length} icons.`);
+            notifyUI('icons-doc', true, `Successfully created documentation with ${iconsArray.length} icons!`);
+        } catch (error) {
+            notifyUI('icons-doc', false, 'Failed to create icon documentation', error.message);
+            console.error(error);
+        }
+    }
 };

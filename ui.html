@@ -4196,12 +4196,12 @@
                         <div class="icons-library-field-unique">
                             <label class="icons-library-label-unique">Icon Library</label>
                             <div class="icons-library-select-wrapper-unique">
-                                <select class="icons-library-select-unique">
-                                    <option>Select Icon Library</option>
-                                    <option>Material Icons</option>
-                                    <option>Feather Icons</option>
-                                    <option>Heroicons</option>
-                                    <option>Font Awesome</option>
+                                <select class="icons-library-select-unique" id="icons-library-select"
+                                    onchange="updateIconCategories()">
+                                    <option value="">Select Icon Library</option>
+                                    <option value="unicons">unicons</option>
+                                    <option value="Vuesax-Icon">Vuesax-Icon</option>
+                                    <option value="Box-Icon">Box-Icon</option>
                                 </select>
                                 <svg class="icons-dropdown-icon-unique" viewBox="0 0 20 20" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -4215,12 +4215,8 @@
                         <div class="icons-category-field-unique">
                             <label class="icons-category-label-unique">Category</label>
                             <div class="icons-category-select-wrapper-unique">
-                                <select class="icons-category-select-unique">
-                                    <option>Select Category</option>
-                                    <option>Actions</option>
-                                    <option>Navigation</option>
-                                    <option>Communication</option>
-                                    <option>Media</option>
+                                <select class="icons-category-select-unique" id="icons-category-select">
+                                    <option value="">Select Category</option>
                                 </select>
                                 <svg class="icons-dropdown-icon-unique" viewBox="0 0 20 20" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -4234,7 +4230,7 @@
                     <!-- Footer -->
                     <div class="icons-footer-wrapper-unique">
                         <span class="icons-footer-text-unique">Generate Full Icon Component</span>
-                        <button class="icons-footer-button-unique">
+                        <button class="icons-footer-button-unique" onclick="createIconsLibraryDoc()">
                             <svg class="icons-footer-button-icon-unique" viewBox="0 0 18 18" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9 3.75V14.25M3.75 9H14.25" stroke="#FFFFFF" stroke-width="2"
@@ -6029,6 +6025,144 @@
         // --- Toast Notification Helpers ---
         let toastCount = 0;
         let activeToasts = {};
+
+        const iconCategoriesMap = {
+            'unicons': [
+                { label: 'Line', value: 'line' },
+                { label: 'Monochrome', value: 'monochrome' },
+                { label: 'Solid', value: 'solid' },
+                { label: 'Thin Line', value: 'thinline' }
+            ],
+            'Vuesax-Icon': [
+                { label: 'Linear', value: 'linear' },
+                { label: 'Bold', value: 'bold' },
+                { label: 'Broken', value: 'broken' },
+                { label: 'Bulk', value: 'bulk' },
+                { label: 'Two-tone', value: 'twotone' },
+                { label: 'Outline', value: 'outline' },
+                { label: 'Crypto', value: 'Crypto' }
+            ],
+            'Box-Icon': [
+                { label: 'Regular', value: 'svg/regular' },
+                { label: 'Solid', value: 'svg/solid' },
+                { label: 'Logos', value: 'svg/logos' }
+            ]
+        };
+
+        function updateIconCategories() {
+            const library = document.getElementById('icons-library-select').value;
+            const categorySelect = document.getElementById('icons-category-select');
+
+            // Clear current options
+            categorySelect.innerHTML = '<option value="">Select Category</option>';
+
+            if (iconCategoriesMap[library]) {
+                // Add "All Categories" option
+                const allOption = document.createElement('option');
+                allOption.value = '__ALL__';
+                allOption.textContent = 'All Categories';
+                categorySelect.appendChild(allOption);
+
+                iconCategoriesMap[library].forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat.value;
+                    option.textContent = cat.label;
+                    categorySelect.appendChild(option);
+                });
+            }
+        }
+
+        async function createIconsLibraryDoc() {
+            const library = document.getElementById('icons-library-select').value;
+            const categoryPath = document.getElementById('icons-category-select').value;
+            const categoryLabel = document.getElementById('icons-category-select').options[document.getElementById('icons-category-select').selectedIndex].text;
+
+            if (!library) {
+                parent.postMessage({ pluginMessage: { type: 'notify', message: 'Please select an icon library first' } }, '*');
+                return;
+            }
+
+            if (!categoryPath) {
+                parent.postMessage({ pluginMessage: { type: 'notify', message: 'Please select a category first' } }, '*');
+                return;
+            }
+
+            const gitLinks = {
+                'unicons': 'https://github.com/harsh2277/unicons.git',
+                'Vuesax-Icon': 'https://github.com/harsh2277/Vuesax-Icon.git',
+                'Box-Icon': 'https://github.com/harsh2277/Box-Icon.git'
+            };
+
+            const gitLink = gitLinks[library] || '';
+            window.activeActionToastId = showLoadingToast(`Fetching icons from ${library}...`);
+
+            try {
+                const repo = `harsh2277/${library}`;
+
+                if (categoryPath === '__ALL__') {
+                    const categories = iconCategoriesMap[library];
+                    console.log(`[UI] Starting batch creation for ${library}: ${categories.length} categories.`);
+
+                    for (let i = 0; i < categories.length; i++) {
+                        const cat = categories[i];
+                        try {
+                            updateToast(window.activeActionToastId, `Category ${i + 1}/${categories.length}: Processing ${cat.label}...`, 'loading', 0);
+                            await fetchAndCreateDoc(repo, cat.value, cat.label, library, gitLink);
+                            // Brief delay to allow Figma side to settle
+                            await new Promise(res => setTimeout(res, 500));
+                        } catch (catError) {
+                            console.error(`[UI] Error in category ${cat.label}:`, catError);
+                        }
+                    }
+                    showSuccessToast(`Successfully created docs for all ${categories.length} categories!`, window.activeActionToastId);
+                } else {
+                    await fetchAndCreateDoc(repo, categoryPath, categoryLabel, library, gitLink);
+                }
+
+            } catch (error) {
+                console.error(error);
+                updateToast(window.activeActionToastId, `Error: ${error.message}`, 'error', 4000);
+            }
+        }
+
+        async function fetchAndCreateDoc(repo, path, label, library, gitLink) {
+            const apiUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
+            console.log(`[Fetcher] Fetching ${label} from: ${apiUrl}`);
+
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                console.warn(`[Fetcher] Skipping ${label}: API returned ${response.status}`);
+                return;
+            }
+
+            const files = await response.json();
+            const svgFiles = Array.isArray(files) ? files.filter(f => f.name.endsWith('.svg')) : [];
+            console.log(`[Fetcher] Found ${svgFiles.length} icons in ${label}`);
+
+            if (svgFiles.length === 0) return;
+
+            const iconsData = [];
+            const batchSize = 10;
+            for (let i = 0; i < svgFiles.length; i += batchSize) {
+                const batch = svgFiles.slice(i, i + batchSize);
+                const batchResults = await Promise.all(batch.map(async file => {
+                    const contentRes = await fetch(file.download_url);
+                    const svgText = await contentRes.text();
+                    return { name: file.name.replace('.svg', ''), svg: svgText };
+                }));
+                iconsData.push(...batchResults);
+            }
+
+            parent.postMessage({
+                pluginMessage: {
+                    type: 'create-icons-doc',
+                    library: library,
+                    category: label,
+                    gitLink: gitLink,
+                    icons: iconsData
+                }
+            }, '*');
+        }
 
         function showLoadingToast(message) {
             return showToast(message, 'loading', 0);
