@@ -5210,8 +5210,8 @@
             } else if (window.selectedSetupType === 'manual') {
                 navigateTo('main-app-screen');
             } else {
-                // If nothing selected, default to main app screen
-                navigateTo('main-app-screen');
+                // If nothing selected, show error toast
+                showErrorToast('Please select a setup type to continue');
             }
         }
 
