@@ -743,20 +743,22 @@
         .brand-color-picker-popup-unique {
             position: absolute;
             top: calc(100% + 8px);
-            right: 0;
-            width: 0px;
-            height: 0px;
-            border: 2px solid #E5E7EB;
-            border-radius: var(--radius-8);
+            left: 0;
+            width: auto;
+            height: auto;
+            border: none;
             cursor: pointer;
-            display: none;
             z-index: 1000;
-            display: none;
-            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .brand-color-picker-popup-unique.active {
-            display: block;
+        .brand-color-picker-popup-unique::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .brand-color-picker-popup-unique::-webkit-color-swatch {
+            border: none;
         }
 
         .color-toggle-section-unique {
@@ -5220,21 +5222,12 @@
         function toggleColorPicker() {
             const picker = document.getElementById('brand-color-picker');
             if (picker) {
-                picker.classList.toggle('active');
-                if (picker.classList.contains('active')) {
-                    picker.focus();
-                    picker.click();
-                }
+                picker.click();
             }
         }
 
         function hideColorPicker() {
-            const picker = document.getElementById('brand-color-picker');
-            if (picker) {
-                setTimeout(() => {
-                    picker.classList.remove('active');
-                }, 200);
-            }
+            // Native color picker closes automatically
         }
 
         // Toggle Color Section
@@ -5414,9 +5407,8 @@
             // Create hidden color picker
             const colorPicker = document.createElement('input');
             colorPicker.type = 'color';
-            colorPicker.className = 'custom-color-picker';
+            colorPicker.className = 'brand-color-picker-popup-unique custom-color-picker';
             colorPicker.value = colorHex;
-            colorPicker.style.display = 'none';
             colorPicker.onchange = function () {
                 updateCustomColorFromPicker(colorName, this.value);
             };
