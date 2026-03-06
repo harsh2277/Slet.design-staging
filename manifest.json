@@ -1,6 +1,6 @@
 {
-    "name": "Slate Design System Builder",
-    "id": "slate-design-system-builder",
+    "name": "Slate.Design-staging",
+    "id": "slate-design-staging",
     "api": "1.0.0",
     "main": "code.js",
     "ui": "ui.html",
